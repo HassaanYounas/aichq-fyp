@@ -3,9 +3,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const jwt = require('./helpers/jwt');
-const helperRouter = require('./routes/helper.router');
-const patientRouter = require('./routes/patient.router');
-const doctorRouter = require('./routes/doctor.router');
+const adminRouter = require('./routes/admin.router');
+//const helperRouter = require('./routes/helper.router');
+// const patientRouter = require('./routes/patient.router');
+// const doctorRouter = require('./routes/doctor.router');
 const errorHandler = require('./helpers/error-handler');
 
 const app = express();
@@ -16,9 +17,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(process.cwd() + '/client/'));
 //app.use(jwt());
-app.use('/api', helperRouter);
-app.use('/api/patient', patientRouter);
-app.use('/api/doctor', doctorRouter);
+// app.use('/api', helperRouter);
+// app.use('/api/patient', patientRouter);
+// app.use('/api/doctor', doctorRouter);
+app.use('/api/admin', adminRouter);
 app.use(errorHandler);
 
 app.get('/', (req,res) => {

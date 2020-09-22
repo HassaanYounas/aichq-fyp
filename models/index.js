@@ -1,4 +1,6 @@
 module.exports = {
-    Patient: require('./patient.model'),
-    Doctor: require('./doctor.model')
+    Group: require('./group.model'),
+    Supervisor: require('./supervisor.model'),
+    Batch: require('./batch.model'),
+    Admin: require('./admin.model')
 };

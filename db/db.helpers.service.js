@@ -1,12 +1,22 @@
-const { Patient, Doctor } = require('../models/index');
+const { Admin, Batch, Group, Supervisor } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function getEverything() {
-    return Promise.all([Patient.find(), Doctor.find()]);
+    return Promise.all([
+        Admin.find(), 
+        Batch.find(),
+        Group.find(),
+        Supervisor.find()
+    ]);
 }
 
 async function clearDB() {
-    return Promise.all([Patient.deleteMany(), Doctor.deleteMany()]);
+    return Promise.all([
+        Batch.deleteMany(), 
+        Batch.deleteMany(),
+        Group.deleteMany(),
+        Supervisor.deleteMany()
+    ]);
 }
 
 module.exports = { getEverything, clearDB }

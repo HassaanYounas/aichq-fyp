@@ -11,7 +11,7 @@ async function createAdmin(params) {
 }
 
 async function loginAdmin(params) {
-    const admin = await Admin.findOne({ Username: params.email });
+    const admin = await Admin.findOne({ Username: params.Username });
     if (admin && bcrypt.compareSync(params.Password, admin.Password)) {
         const { Password, ...adminWithoutPassword } = admin.toObject();
         const token = jwt.sign({ sub: admin.id }, config.secret);

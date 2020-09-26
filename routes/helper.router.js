@@ -6,8 +6,8 @@ router.post('/everything', getEverything);
 router.post('/clear', clearDB);
 
 function getEverything(req, res, next) {
-    helperService.getEverything().then((patients, doctors, appointments) => {
-        res.json(patients, doctors, appointments);
+    helperService.getEverything().then((admin, batches, groups, supervisors) => {
+        res.json(admin, batches, groups, supervisors);
     }).catch(err => next(err)); 
 }
 

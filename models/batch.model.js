@@ -5,7 +5,7 @@ const BatchSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    Department: {
+    Program: {
         type: String,
         required: true,
         trim: true

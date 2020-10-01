@@ -12,7 +12,7 @@ async function getEverything() {
 
 async function clearDB() {
     return Promise.all([
-        Batch.deleteMany(), 
+        Admin.deleteMany(), 
         Batch.deleteMany(),
         Group.deleteMany(),
         Supervisor.deleteMany()

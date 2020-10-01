@@ -20,15 +20,22 @@ async function loginAdmin(params) {
 }
 
 async function updateAdmin(params) {
-    await Admin.updateOne({ Username: params.Username }, {
-        FullName: params.NewFullName,
-        Username: params.NewUsername,
-        Password: bcrypt.hashSync(params.NewPassword, 10)
-    }); return await Admin.findOne({ Username: params.NewUsername });
+    await Admin.updateOne({}, {
+        FullName: params.FullName,
+        Username: params.Username,
+        Password: bcrypt.hashSync(params.Password, 10)
+    }); return await Admin.findOne({});
+}
+
+async function getAdmin() {
+    const admin = await Admin.findOne();
+    const { Password, ...adminWithoutPassword } = admin.toObject();
+    return adminWithoutPassword;
 }
 
 module.exports = {
     createAdmin,
     loginAdmin,
-    updateAdmin
+    updateAdmin,
+    getAdmin
 }

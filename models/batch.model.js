@@ -14,6 +14,10 @@ const BatchSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    Completed: {
+        type: Boolean,
+        default: false
+    },
     Supervisors: [{
         Username: {
             type: String,

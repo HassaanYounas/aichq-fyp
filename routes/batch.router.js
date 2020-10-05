@@ -6,6 +6,7 @@ router.post('/create', createBatch);
 router.post('/promote', promoteBatch);
 router.post('/delete', deleteBatch);
 router.post('/all', getBatches);
+router.post('/add/supervisor', addSupervisorToBatch);
 
 function createBatch(req, res, next) {
     batchService.createBatch(req.body).then(batch => {
@@ -28,6 +29,12 @@ function deleteBatch(req, res, next) {
 function getBatches(req, res, next) {
     batchService.getBatches().then((batches) => {
         res.json(batches);
+    }).catch(err => next(err)); 
+}
+
+function addSupervisorToBatch(req, res, next) {
+    batchService.addSupervisorToBatch(req.body).then(() => {
+        res.json({});
     }).catch(err => next(err)); 
 }
 

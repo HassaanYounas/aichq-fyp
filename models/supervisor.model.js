@@ -15,8 +15,7 @@ const SupervisorSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 8,
-        trim: true,
-        default: '123456789'
+        trim: true
     }
 });
 

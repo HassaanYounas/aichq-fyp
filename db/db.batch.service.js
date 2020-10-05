@@ -27,9 +27,27 @@ async function getBatches() {
     return await Batch.find();
 }
 
+async function addSupervisorToBatch(params) {
+    if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
+        if (await Batch.findOne({ 
+                Year: params.Year, 
+                Program: params.Program,
+                'Supervisors.Username': params.Username
+        })) throw 'Supervisor Already Exists in Batch.';
+        return await Batch.updateOne(
+            { Year: params.Year, Program: params.Program }, 
+            { $push: { Supervisors: {
+                Username: params.Username, 
+                Proposals: []
+            } } }
+        );
+    } else throw 'Batch Does Not Exist.';
+}
+
 module.exports = {
     createBatch,
     promoteBatch,
     deleteBatch,
-    getBatches
+    getBatches,
+    addSupervisorToBatch
 }

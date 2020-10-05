@@ -14,7 +14,9 @@ function jwt() {
     const secret = config.secret;
     return expressJwt({ secret, isRevoked }).unless({
         path: [
-            '/api/admin/login'
+            '/api/admin/login',
+            '/api/admin/create',
+            '/api/batch/all/slim'
         ]
     });
 }

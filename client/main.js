@@ -119,6 +119,26 @@ AdminLoginComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
 
 /***/ }),
 
+/***/ "4G+o":
+/*!*************************************************!*\
+  !*** ./src/app/models/supervisorBatch.model.ts ***!
+  \*************************************************/
+/*! exports provided: SupervisorBatch */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SupervisorBatch", function() { return SupervisorBatch; });
+class SupervisorBatch {
+    constructor() {
+        this.Batch = '';
+        this.Supervisors = new Array();
+    }
+}
+
+
+/***/ }),
+
 /***/ "8ENu":
 /*!*************************************************************************************!*\
   !*** ./src/app/components/student/student-dashboard/student-dashboard.component.ts ***!
@@ -627,6 +647,18 @@ class ApiService {
     getBatches() {
         return this.requestWithToken({}, _assets_api_json__WEBPACK_IMPORTED_MODULE_4__["getBatches"]);
     }
+    addSupervisorToBatch(body) {
+        return this.requestWithToken(body, _assets_api_json__WEBPACK_IMPORTED_MODULE_4__["addSupervisorToBatch"]);
+    }
+    addSupervisor(body) {
+        return this.requestWithToken(body, _assets_api_json__WEBPACK_IMPORTED_MODULE_4__["addSupervisor"]);
+    }
+    deleteSupervisor(body) {
+        return this.requestWithToken(body, _assets_api_json__WEBPACK_IMPORTED_MODULE_4__["deleteSupervisor"]);
+    }
+    getSupervisors() {
+        return this.requestWithToken({}, _assets_api_json__WEBPACK_IMPORTED_MODULE_4__["getSupervisors"]);
+    }
     requestWithToken(body, url) {
         const headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
             'Content-Type': 'application/json',
@@ -690,7 +722,7 @@ function AdminFypBatchesComponent_option_53_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate2"]("", batch_r4.Program, "-", batch_r4.Year, "");
 } }
-function AdminFypBatchesComponent_tr_94_Template(rf, ctx) { if (rf & 1) {
+function AdminFypBatchesComponent_tr_98_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "tr");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "th", 35);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
@@ -726,6 +758,8 @@ class AdminFypBatchesComponent {
         this.validProgram = true;
         this.validPhase = true;
         this.validPromoteBatch = true;
+        this.validDeleteBatchYear = true;
+        this.validDeleteBatchProgram = true;
         this.addBatchError = '';
         this.promoteBatchError = '';
         this.deleteBatchError = '';
@@ -798,16 +832,26 @@ class AdminFypBatchesComponent {
         }
     }
     onDeleteBatchFormSubmit(formData) {
-        this.api.deleteBatch(formData).subscribe((res) => {
-            window.location.reload();
-        }, (error) => {
-            this.deleteBatchError = error;
-            setTimeout(() => this.deleteBatchError = '', 3000);
-        });
+        if (formData.Year === '')
+            this.validDeleteBatchYear = false;
+        else
+            this.validDeleteBatchYear = true;
+        if (formData.Program === '')
+            this.validDeleteBatchProgram = false;
+        else
+            this.validDeleteBatchProgram = true;
+        if (this.validDeleteBatchYear && this.validDeleteBatchProgram) {
+            this.api.deleteBatch(formData).subscribe((res) => {
+                window.location.reload();
+            }, (error) => {
+                this.deleteBatchError = error;
+                setTimeout(() => this.deleteBatchError = '', 3000);
+            });
+        }
     }
 }
 AdminFypBatchesComponent.ɵfac = function AdminFypBatchesComponent_Factory(t) { return new (t || AdminFypBatchesComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_api_service__WEBPACK_IMPORTED_MODULE_2__["ApiService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_input_validation_service__WEBPACK_IMPORTED_MODULE_3__["InputValidationService"])); };
-AdminFypBatchesComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AdminFypBatchesComponent, selectors: [["app-admin-fyp-batches"]], inputs: { batches: "batches" }, decls: 95, vars: 21, consts: [[1, "text-dark"], [1, "container"], [1, "my-3"], ["type", "button", "data-toggle", "modal", "data-target", "#newBatchModal", 1, "btn", "btn-primary"], ["id", "newBatchModal", "role", "dialog", 1, "modal", "fade"], ["role", "document", 1, "modal-dialog"], [1, "modal-content"], [1, "modal-header"], [1, "modal-title"], [1, "modal-body"], ["id", "newBatchForm", 3, "formGroup", "ngSubmit"], ["formControlName", "Year", 1, "form-control", "mb-2"], ["selected", ""], [4, "ngFor", "ngForOf"], [1, "text-danger", "mb-2", 3, "ngClass"], ["formControlName", "Program", "type", "text", "placeholder", "Program e.g. BSCS, BSIT", 1, "form-control", "mb-2"], ["formControlName", "Phase", 1, "form-control", "mb-1"], [1, "text-danger", "mt-2", 3, "innerHTML"], [1, "modal-footer"], ["form", "newBatchForm", "type", "submit", 1, "btn", "btn-primary"], ["type", "button", "data-dismiss", "modal", 1, "btn", "btn-secondary"], ["type", "button", "data-toggle", "modal", "data-target", "#promoteBatchModal", 1, "btn", "btn-success", "m-3"], ["id", "promoteBatchModal", "role", "dialog", 1, "modal", "fade"], ["id", "promoteBatchForm", 3, "formGroup", "ngSubmit"], ["formControlName", "BatchID", 1, "form-control"], [1, "text-danger", "mt-2", 3, "ngClass"], ["form", "promoteBatchForm", "type", "submit", 1, "btn", "btn-primary"], ["type", "button", "data-toggle", "modal", "data-target", "#deleteBatchModal", 1, "btn", "btn-danger"], ["id", "deleteBatchModal", "role", "dialog", 1, "modal", "fade"], ["id", "deleteBatchForm", 3, "formGroup", "ngSubmit"], ["formControlName", "Year", "type", "number", "placeholder", "Batch Year", 1, "form-control", "mb-2"], ["formControlName", "Program", "type", "text", "placeholder", "Program e.g. BSCS, BSIT", 1, "form-control"], ["form", "deleteBatchForm", "type", "submit", 1, "btn", "btn-primary"], [1, "table"], ["scope", "col"], ["scope", "row"]], template: function AdminFypBatchesComponent_Template(rf, ctx) { if (rf & 1) {
+AdminFypBatchesComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AdminFypBatchesComponent, selectors: [["app-admin-fyp-batches"]], inputs: { batches: "batches" }, decls: 99, vars: 27, consts: [[1, "text-dark"], [1, "container"], [1, "my-3"], ["type", "button", "data-toggle", "modal", "data-target", "#newBatchModal", 1, "btn", "btn-primary"], ["id", "newBatchModal", "role", "dialog", 1, "modal", "fade"], ["role", "document", 1, "modal-dialog"], [1, "modal-content"], [1, "modal-header"], [1, "modal-title"], [1, "modal-body"], ["id", "newBatchForm", 3, "formGroup", "ngSubmit"], ["formControlName", "Year", 1, "form-control", "mb-2"], ["selected", ""], [4, "ngFor", "ngForOf"], [1, "text-danger", "mb-2", 3, "ngClass"], ["formControlName", "Program", "type", "text", "placeholder", "Program e.g. BSCS, BSIT", 1, "form-control", "mb-2"], ["formControlName", "Phase", 1, "form-control", "mb-1"], [1, "text-danger", "mt-2", 3, "innerHTML"], [1, "modal-footer"], ["form", "newBatchForm", "type", "submit", 1, "btn", "btn-primary"], ["type", "button", "data-dismiss", "modal", 1, "btn", "btn-secondary"], ["type", "button", "data-toggle", "modal", "data-target", "#promoteBatchModal", 1, "btn", "btn-success", "m-3"], ["id", "promoteBatchModal", "role", "dialog", 1, "modal", "fade"], ["id", "promoteBatchForm", 3, "formGroup", "ngSubmit"], ["formControlName", "BatchID", 1, "form-control"], [1, "text-danger", "mt-2", 3, "ngClass"], ["form", "promoteBatchForm", "type", "submit", 1, "btn", "btn-primary"], ["type", "button", "data-toggle", "modal", "data-target", "#deleteBatchModal", 1, "btn", "btn-danger"], ["id", "deleteBatchModal", "role", "dialog", 1, "modal", "fade"], ["id", "deleteBatchForm", 3, "formGroup", "ngSubmit"], ["formControlName", "Year", "type", "number", "placeholder", "Batch Year", 1, "form-control", "mb-2"], ["formControlName", "Program", "type", "text", "placeholder", "Program e.g. BSCS, BSIT", 1, "form-control"], ["form", "deleteBatchForm", "type", "submit", 1, "btn", "btn-danger"], [1, "table"], ["scope", "col"], ["scope", "row"]], template: function AdminFypBatchesComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "h3", 2);
@@ -923,44 +967,50 @@ AdminFypBatchesComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵ�
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](71, "form", 29);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngSubmit", function AdminFypBatchesComponent_Template_form_ngSubmit_71_listener() { return ctx.onDeleteBatchFormSubmit(ctx.deleteBatchForm.value); });
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](72, "input", 30);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](73, "input", 31);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](73, "div", 14);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](74, "Batch Cannot be Empty.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](74, "div", 17);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](75, "div", 18);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](76, "button", 32);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](77, "Delete");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](78, "button", 20);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](79, "Close");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](75, "input", 31);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](76, "div", 25);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](77, "Program Cannot be Empty.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](78, "div", 17);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](79, "div", 18);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](80, "button", 32);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](81, "Delete");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](82, "button", 20);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](83, "Close");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](80, "h5", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](81, "Ongoing and Completed FYP Batches:");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](82, "table", 33);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](83, "thead");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](84, "tr");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](85, "th", 34);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](86, "No.");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](84, "h5", 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](85, "List of all FYP Batches:");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](87, "th", 34);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](88, "Program");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](86, "table", 33);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](87, "thead");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](88, "tr");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](89, "th", 34);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](90, "Year");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](90, "No.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](91, "th", 34);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](92, "Phase");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](92, "Program");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](93, "th", 34);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](94, "Year");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](95, "th", 34);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](96, "Phase");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](93, "tbody");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](94, AdminFypBatchesComponent_tr_94_Template, 9, 4, "tr", 13);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](97, "tbody");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](98, AdminFypBatchesComponent_tr_98_Template, 9, 4, "tr", 13);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -970,11 +1020,11 @@ AdminFypBatchesComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵ�
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.years);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](13, _c0, ctx.validYear));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](15, _c0, ctx.validYear));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](15, _c0, ctx.validProgram));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](17, _c0, ctx.validProgram));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](11);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](17, _c0, ctx.validPhase));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](19, _c0, ctx.validPhase));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx.addBatchError, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](15);
@@ -982,12 +1032,16 @@ AdminFypBatchesComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵ�
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.batches);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](19, _c0, ctx.validPromoteBatch));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](21, _c0, ctx.validPromoteBatch));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx.promoteBatchError, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](15);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("formGroup", ctx.deleteBatchForm);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](23, _c0, ctx.validDeleteBatchYear));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](25, _c0, ctx.validDeleteBatchProgram));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx.deleteBatchError, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](20);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.batches);
@@ -1089,189 +1143,358 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AdminSupervisorsComponent", function() { return AdminSupervisorsComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
+/* harmony import */ var src_app_models_supervisorBatch_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/models/supervisorBatch.model */ "4G+o");
+/* harmony import */ var src_app_services_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/services/api.service */ "H+bZ");
+/* harmony import */ var src_app_services_input_validation_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/input-validation.service */ "Vdzt");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common */ "ofXK");
 
 
 
+
+
+
+
+
+function AdminSupervisorsComponent_div_55_ul_6_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "ul", 42);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "li", 43);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+} if (rf & 2) {
+    const supervisor_r6 = ctx.$implicit;
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate2"]("", supervisor_r6.FullName, " | ", supervisor_r6.Username, "");
+} }
+function AdminSupervisorsComponent_div_55_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 36);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 37);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "button", 38);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "div", 39);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "div", 40);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](6, AdminSupervisorsComponent_div_55_ul_6_Template, 3, 2, "ul", 41);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+} if (rf & 2) {
+    const sb_r3 = ctx.$implicit;
+    const i_r4 = ctx.index;
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("data-target", "#collapse" + i_r4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](sb_r3.Batch);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("id", "collapse" + i_r4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", sb_r3.Supervisors);
+} }
+function AdminSupervisorsComponent_tr_73_Template(rf, ctx) { if (rf & 1) {
+    const _r10 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "tr");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "th", 44);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "td");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "td");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](6);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "td");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "button", 45);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AdminSupervisorsComponent_tr_73_Template_button_click_8_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r10); const i_r8 = ctx.index; const ctx_r9 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r9.setCurrentSupervisor(i_r8); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](9, "Add");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+} if (rf & 2) {
+    const supervisor_r7 = ctx.$implicit;
+    const i_r8 = ctx.index;
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](i_r8 + 1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](supervisor_r7.FullName);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](supervisor_r7.Username);
+} }
+function AdminSupervisorsComponent_a_81_Template(rf, ctx) { if (rf & 1) {
+    const _r14 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "a", 46);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AdminSupervisorsComponent_a_81_Template_a_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r14); const i_r12 = ctx.index; const ctx_r13 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r13.setCurrentBatch(i_r12); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+} if (rf & 2) {
+    const batch_r11 = ctx.$implicit;
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate2"]("", batch_r11.Program, "-", batch_r11.Year, "");
+} }
+const _c0 = function (a0) { return { "d-none": a0 }; };
 class AdminSupervisorsComponent {
-    constructor() { }
-    ngOnInit() { }
+    constructor(api, validate) {
+        this.api = api;
+        this.validate = validate;
+        this.validFullName = true;
+        this.validUsername = true;
+        this.validDeleteUsername = true;
+        this.addSupervisorError = '';
+        this.deleteSupervisorError = '';
+        this.addSupervisorToBatchError = '';
+        this.addSupervisorToBatchModalTitle = '';
+    }
+    ngOnInit() {
+        this.addSupervisorForm = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormGroup"]({
+            FullName: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](''),
+            Username: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](''),
+            Password: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]('123456789')
+        });
+        this.deleteSupervisorForm = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormGroup"]({
+            Username: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]('')
+        });
+        this.setSupervisorBatches();
+    }
+    setSupervisorBatches() {
+        this.supervisorBatches = new Array();
+        for (let i = 0; i < this.batches.length; i++) {
+            let sb = new src_app_models_supervisorBatch_model__WEBPACK_IMPORTED_MODULE_2__["SupervisorBatch"]();
+            sb.Batch = this.batches[i].Year.toString() + '-' + this.batches[i].Program;
+            for (let j = 0; j < this.batches[i].Supervisors.length; j++) {
+                for (let k = 0; k < this.supervisors.length; k++)
+                    if (this.batches[i].Supervisors[j].Username === this.supervisors[k].Username)
+                        sb.Supervisors.push(this.supervisors[k]);
+            }
+            this.supervisorBatches.push(sb);
+        }
+    }
+    onAddSupervisorFormSubmit(formData) {
+        if (!this.validate.isAlphabetsOnly(formData.FullName))
+            this.validFullName = false;
+        else
+            this.validFullName = true;
+        if (!this.validate.isSupervisorUsername(formData.Username))
+            this.validUsername = false;
+        else
+            this.validUsername = true;
+        if (this.validFullName && this.validUsername) {
+            this.api.addSupervisor(formData).subscribe((res) => {
+                window.location.reload();
+            }, (error) => {
+                this.addSupervisorError = error;
+                setTimeout(() => this.addSupervisorError = '', 3000);
+            });
+        }
+    }
+    onDeleteSupervisorFormSubmit(formData) {
+        if (formData.Username === '')
+            this.validDeleteUsername = false;
+        else
+            this.validDeleteUsername = true;
+        if (this.validDeleteUsername) {
+            this.api.deleteSupervisor(formData).subscribe((res) => {
+                window.location.reload();
+            }, (error) => {
+                this.deleteSupervisorError = error;
+                setTimeout(() => this.deleteSupervisorError = '', 3000);
+            });
+        }
+    }
+    setCurrentSupervisor(i) {
+        this.currentSupervisor = this.supervisors[i];
+        this.addSupervisorToBatchModalTitle = 'Add ' + this.currentSupervisor.FullName + ' to an FYP Batch';
+    }
+    setCurrentBatch(i) {
+        this.currentBatch = this.batches[i];
+    }
+    addSupervisorToBatch() {
+        this.api.addSupervisorToBatch({
+            Year: this.currentBatch.Year,
+            Program: this.currentBatch.Program,
+            Username: this.currentSupervisor.Username
+        }).subscribe((res) => {
+            window.location.reload();
+        }, (error) => {
+            this.addSupervisorToBatchError = error;
+            setTimeout(() => this.addSupervisorToBatchError = '', 3000);
+        });
+    }
 }
-AdminSupervisorsComponent.ɵfac = function AdminSupervisorsComponent_Factory(t) { return new (t || AdminSupervisorsComponent)(); };
-AdminSupervisorsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AdminSupervisorsComponent, selectors: [["app-admin-supervisors"]], decls: 104, vars: 0, consts: [[1, "text-dark"], [1, "container"], [1, "my-3"], ["id", "accordion"], [1, "card"], ["id", "heading1", 1, "card-header"], [1, "mb-0"], ["data-toggle", "collapse", "data-target", "#batch1", 1, "btn", "btn-link"], ["id", "batch1", "aria-labelledby", "heading1", "data-parent", "#accordion", 1, "collapse"], [1, "card-body"], ["type", "button", "data-toggle", "modal", "data-target", "#addSupervisorModal1", 1, "btn", "btn-primary", "mb-3"], ["id", "addSupervisorModal1", "tabindex", "-1", "role", "dialog", 1, "modal", "fade"], ["role", "document", 1, "modal-dialog"], [1, "modal-content"], [1, "modal-header"], ["id", "addSupervisorModal1", 1, "modal-title"], ["type", "button", "data-dismiss", "modal", "aria-label", "Close", 1, "close"], ["aria-hidden", "true"], [1, "modal-body"], [1, "form-group"], ["for", "inputSupervisorName1"], ["type", "text", "id", "inputSupervisorName1", "aria-describedby", "inputSupervisorName1Help", "placeholder", "Enter Full Name", 1, "form-control"], ["for", "inputSupervisorUserName1"], ["type", "text", "id", "inputSupervisorUserName1", "placeholder", "Enter Username", 1, "form-control"], [1, "modal-footer"], ["type", "submit", "data-dismiss", "modal", 1, "btn", "btn-primary"], ["type", "button", "data-dismiss", "modal", 1, "btn", "btn-secondary"], [1, "list-group"], [1, "list-group-item", "d-flex", "align-items-center"], [1, "mr-auto"], ["type", "button", "data-toggle", "modal", "data-target", "#viewSupervisorProjectsModal1", 1, "btn", "btn-info", "mr-3"], ["id", "viewSupervisorProjectsModal1", "tabindex", "-1", "role", "dialog", "aria-labelledby", "viewSupervisorProjectsModal1Label", "aria-hidden", "true", 1, "modal", "fade"], ["id", "viewSupervisorProjectsModal1Label", 1, "modal-title"], [1, "list-group-item"], ["type", "button", "data-toggle", "modal", "data-target", "#editSupervisorModal1", 1, "btn", "btn-info"], ["id", "editSupervisorModal1", "tabindex", "-1", "role", "dialog", "aria-labelledby", "editSupervisorModal1Label", "aria-hidden", "true", 1, "modal", "fade"], ["id", "editSupervisorModal1Label", 1, "modal-title"], ["for", "inputSupervisorNameEdit1"], ["type", "text", "id", "inputSupervisorNameEdit1", "placeholder", "Enter Full Name", 1, "form-control"], ["for", "inputSupervisorUserNameEdit1"], ["type", "text", "id", "inputSupervisorUserNameEdit1", "placeholder", "Enter Username", 1, "form-control"], ["for", "inputSupervisorNewNameEdit1"], ["type", "text", "id", "inputSupervisorNewNameEdit1", "placeholder", "Enter New Full Name", 1, "form-control"], ["for", "inputSupervisorNewUserNameEdit1"], ["type", "text", "id", "inputSupervisorNewUserNameEdit1", "placeholder", "Enter New Username", 1, "form-control"]], template: function AdminSupervisorsComponent_Template(rf, ctx) { if (rf & 1) {
+AdminSupervisorsComponent.ɵfac = function AdminSupervisorsComponent_Factory(t) { return new (t || AdminSupervisorsComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_api_service__WEBPACK_IMPORTED_MODULE_3__["ApiService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_input_validation_service__WEBPACK_IMPORTED_MODULE_4__["InputValidationService"])); };
+AdminSupervisorsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AdminSupervisorsComponent, selectors: [["app-admin-supervisors"]], inputs: { supervisors: "supervisors", batches: "batches" }, decls: 88, vars: 18, consts: [[1, "text-dark"], [1, "container"], [1, "my-3"], ["type", "button", "data-toggle", "modal", "data-target", "#addSupervisorModal", 1, "btn", "btn-primary"], ["id", "addSupervisorModal", "role", "dialog", 1, "modal", "fade"], [1, "modal-dialog"], [1, "modal-content"], [1, "modal-header"], [1, "modal-title"], [1, "modal-body"], ["id", "addSupervisorForm", 3, "formGroup", "ngSubmit"], ["formControlName", "FullName", "type", "text", "placeholder", "Full Name", 1, "form-control", "mb-2"], [1, "text-danger", "mb-2", 3, "ngClass"], ["formControlName", "Username", "type", "text", "placeholder", "Username", 1, "form-control"], [1, "text-danger", "mt-2", 3, "ngClass"], [1, "text-danger", "mt-2", 3, "innerHTML"], [1, "modal-footer"], ["form", "addSupervisorForm", "type", "submit", 1, "btn", "btn-primary"], ["type", "button", "data-dismiss", "modal", 1, "btn", "btn-secondary"], ["type", "button", "data-toggle", "modal", "data-target", "#deleteSupervisorModal", 1, "btn", "btn-danger", "m-3"], ["id", "deleteSupervisorModal", "role", "dialog", 1, "modal", "fade"], ["id", "deleteSupervisorForm", 3, "formGroup", "ngSubmit"], ["form", "deleteSupervisorForm", "type", "submit", 1, "btn", "btn-danger"], ["type", "button", "data-toggle", "modal", "data-target", "#viewSupervisorsAccordingToBatchModal", 1, "btn", "btn-info"], ["id", "viewSupervisorsAccordingToBatchModal", "role", "dialog", 1, "modal", "fade"], ["id", "accordion"], ["class", "card", 4, "ngFor", "ngForOf"], [1, "table"], ["scope", "col"], [4, "ngFor", "ngForOf"], ["id", "addSupervisorToBatchModal", "role", "dialog", 1, "modal", "fade"], [1, "modal-title", 3, "innerHTML"], ["role", "tablist", 1, "list-group"], ["class", "list-group-item list-group-item-action", "data-toggle", "list", "role", "tab", 3, "click", 4, "ngFor", "ngForOf"], [1, "btn", "btn-primary", 3, "click"], ["type", "button", "data-dismiss", "modal", 1, "btn", "btn-default"], [1, "card"], [1, "card-header"], ["data-toggle", "collapse", 1, "btn", "btn-link"], ["data-parent", "#accordion", 1, "collapse"], [1, "card-body"], ["class", "list-group", 4, "ngFor", "ngForOf"], [1, "list-group"], [1, "list-group-item"], ["scope", "row"], ["type", "button", "data-toggle", "modal", "data-target", "#addSupervisorToBatchModal", 1, "btn", "btn-success", 3, "click"], ["data-toggle", "list", "role", "tab", 1, "list-group-item", "list-group-item-action", 3, "click"]], template: function AdminSupervisorsComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "h3", 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3, "Supervisors");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "h5", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5, "FYP Batch List");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "button", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5, "Add");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "div", 4);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "div", 5);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "h5", 6);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "button", 7);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11, "CS-2021 (Phase II)");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "div", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "div", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "div", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "h4", 8);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11, "Add Supervisor");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "div", 9);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "form", 10);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngSubmit", function AdminSupervisorsComponent_Template_form_ngSubmit_13_listener() { return ctx.onAddSupervisorFormSubmit(ctx.addSupervisorForm.value); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](14, "input", 11);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](15, "div", 12);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](16, "Invalid Full Name.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "div", 8);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "div", 9);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "button", 10);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](15, "Add");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](17, "input", 13);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](18, "div", 14);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](19, "Invalid Username. Valid examples are CS-II or CS-II3.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "div", 11);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "div", 12);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](18, "div", 13);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](19, "div", 14);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](20, "h5", 15);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](21, "Add a New Supervisor");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "button", 16);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](23, "span", 17);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](24, "\u00D7");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](20, "div", 15);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](21, "div", 16);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "button", 17);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](23, "Add");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](24, "button", 18);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](25, "Close");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](25, "div", 18);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "form");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "div", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "label", 20);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](29, "Full Name");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](30, "input", 21);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "div", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](32, "label", 22);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](33, "Username");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](34, "input", 23);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "button", 19);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](27, "Delete");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "div", 20);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](29, "div", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](30, "div", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "div", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](32, "h4", 8);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](33, "Delete Supervisor");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](35, "div", 24);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](36, "button", 25);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](37, "Submit");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](38, "button", 26);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](39, "Close");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](34, "div", 9);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](35, "form", 21);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngSubmit", function AdminSupervisorsComponent_Template_form_ngSubmit_35_listener() { return ctx.onDeleteSupervisorFormSubmit(ctx.deleteSupervisorForm.value); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](36, "input", 13);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](37, "div", 14);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](38, "Username Cannot be Empty.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](39, "div", 15);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](40, "div", 16);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](41, "button", 22);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](42, "Delete");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](43, "button", 18);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](44, "Close");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](40, "ul", 27);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](41, "li", 28);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](42, "span", 29);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](43, "Dulcie Bains");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](44, "button", 30);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](45, "Projects");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](46, "div", 31);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](47, "div", 12);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](48, "div", 13);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](49, "div", 14);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](50, "h5", 32);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](51, "Supervisor Projects");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](52, "button", 16);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](53, "span", 17);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](54, "\u00D7");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](45, "button", 23);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](46, "View According to Batches");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](47, "div", 24);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](48, "div", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](49, "div", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](50, "div", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](51, "h4", 8);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](52, "Supervisors in Each Batch");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](55, "div", 18);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](56, "ul", 27);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](57, "li", 33);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](58, "Cras justo odio");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](59, "li", 33);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](60, "Dapibus ac facilisis in");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](53, "div", 9);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](54, "div", 25);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](55, AdminSupervisorsComponent_div_55_Template, 7, 4, "div", 26);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](61, "li", 33);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](62, "Morbi leo risus");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](63, "li", 33);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](64, "Porta ac consectetur ac");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](56, "div", 16);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](57, "button", 18);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](58, "Close");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](65, "li", 33);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](66, "Vestibulum at eros");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](67, "div", 24);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](68, "button", 26);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](69, "Close");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](59, "h5", 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](60, "List of all FYP Supervisors:");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](61, "table", 27);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](62, "thead");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](63, "tr");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](64, "th", 28);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](65, "No.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](66, "th", 28);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](67, "Full Name");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](70, "button", 34);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](71, "Edit");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](68, "th", 28);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](69, "Username");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](72, "div", 35);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](73, "div", 12);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](74, "div", 13);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](75, "div", 14);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](76, "h5", 36);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](77, "Edit Supervisor Info");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](70, "th", 28);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](71, "Add to Batch");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](78, "button", 16);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](79, "span", 17);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](80, "\u00D7");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](72, "tbody");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](73, AdminSupervisorsComponent_tr_73_Template, 10, 3, "tr", 29);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](81, "div", 18);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](82, "form");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](83, "div", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](84, "label", 37);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](85, "Full Name");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](86, "input", 38);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](74, "div", 30);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](75, "div", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](76, "div", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](77, "div", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](78, "h4", 31);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](87, "div", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](88, "label", 39);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](89, "Username");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](79, "div", 9);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](80, "div", 32);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](81, AdminSupervisorsComponent_a_81_Template, 2, 2, "a", 33);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](90, "input", 40);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](82, "div", 15);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](91, "div", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](92, "label", 41);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](93, "New Full Name");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](83, "div", 16);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](84, "button", 34);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AdminSupervisorsComponent_Template_button_click_84_listener() { return ctx.addSupervisorToBatch(); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](85, "Add");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](94, "input", 42);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](86, "button", 35);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](87, "Close");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](95, "div", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](96, "label", 43);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](97, "New Username");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](98, "input", 44);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](99, "div", 24);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](100, "button", 25);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](101, "Edit");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](102, "button", 26);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](103, "Close");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["ɵangular_packages_forms_forms_y"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["NgControlStatusGroup"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvYWRtaW4vYWRtaW4tZGFzaGJvYXJkL2FkbWluLXN1cGVydmlzb3JzL2FkbWluLXN1cGVydmlzb3JzLmNvbXBvbmVudC5zY3NzIn0= */"] });
+    } if (rf & 2) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](13);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("formGroup", ctx.addSupervisorForm);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](12, _c0, ctx.validFullName));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](14, _c0, ctx.validUsername));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx.addSupervisorError, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](15);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("formGroup", ctx.deleteSupervisorForm);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](16, _c0, ctx.validDeleteUsername));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx.deleteSupervisorError, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](16);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.supervisorBatches);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](18);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.supervisors);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx.addSupervisorToBatchModalTitle, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.batches);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx.addSupervisorToBatchError, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
+    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["ɵangular_packages_forms_forms_y"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["NgControlStatusGroup"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormGroupDirective"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControlName"], _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgClass"], _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvYWRtaW4vYWRtaW4tZGFzaGJvYXJkL2FkbWluLXN1cGVydmlzb3JzL2FkbWluLXN1cGVydmlzb3JzLmNvbXBvbmVudC5zY3NzIn0= */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AdminSupervisorsComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -1279,7 +1502,11 @@ AdminSupervisorsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵ
                 templateUrl: './admin-supervisors.component.html',
                 styleUrls: ['./admin-supervisors.component.scss']
             }]
-    }], function () { return []; }, null); })();
+    }], function () { return [{ type: src_app_services_api_service__WEBPACK_IMPORTED_MODULE_3__["ApiService"] }, { type: src_app_services_input_validation_service__WEBPACK_IMPORTED_MODULE_4__["InputValidationService"] }]; }, { supervisors: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], batches: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }] }); })();
 
 
 /***/ }),
@@ -1560,6 +1787,18 @@ class InputValidationService {
             if (str[0] === 'B' && str[1] === 'S')
                 if (this.isAlphabetsOnly(str[2]) && this.isAlphabetsOnly(str[3]))
                     return true;
+        }
+        return false;
+    }
+    isSupervisorUsername(str) {
+        const regex = /^[A-Z0-9-]+$/;
+        if (str.match(regex)) {
+            if (this.isAlphabetsOnly(str[0]) && this.isAlphabetsOnly(str[1])) {
+                if (str[2] === '-') {
+                    if (this.isAlphabetsOnly(str[3]) && this.isAlphabetsOnly(str[4]))
+                        return true;
+                }
+            }
         }
         return false;
     }
@@ -1866,15 +2105,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var src_app_models_admin_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/app/models/admin.model */ "9TfB");
 /* harmony import */ var src_app_models_batch_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/models/batch.model */ "smb2");
-/* harmony import */ var src_app_services_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/services/api.service */ "H+bZ");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "tyNb");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common */ "ofXK");
-/* harmony import */ var _admin_fyp_batches_admin_fyp_batches_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./admin-fyp-batches/admin-fyp-batches.component */ "LLHL");
-/* harmony import */ var _admin_supervisors_admin_supervisors_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./admin-supervisors/admin-supervisors.component */ "Qipd");
-/* harmony import */ var _admin_students_admin_students_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./admin-students/admin-students.component */ "ShQ0");
-/* harmony import */ var _admin_groups_admin_groups_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./admin-groups/admin-groups.component */ "S442");
-/* harmony import */ var _admin_notifications_admin_notifications_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./admin-notifications/admin-notifications.component */ "MFjp");
-/* harmony import */ var _admin_settings_admin_settings_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./admin-settings/admin-settings.component */ "aH8B");
+/* harmony import */ var src_app_models_supervisor_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/models/supervisor.model */ "gZgQ");
+/* harmony import */ var src_app_services_api_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/api.service */ "H+bZ");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "tyNb");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common */ "ofXK");
+/* harmony import */ var _admin_fyp_batches_admin_fyp_batches_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./admin-fyp-batches/admin-fyp-batches.component */ "LLHL");
+/* harmony import */ var _admin_supervisors_admin_supervisors_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./admin-supervisors/admin-supervisors.component */ "Qipd");
+/* harmony import */ var _admin_students_admin_students_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./admin-students/admin-students.component */ "ShQ0");
+/* harmony import */ var _admin_groups_admin_groups_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./admin-groups/admin-groups.component */ "S442");
+/* harmony import */ var _admin_notifications_admin_notifications_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./admin-notifications/admin-notifications.component */ "MFjp");
+/* harmony import */ var _admin_settings_admin_settings_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./admin-settings/admin-settings.component */ "aH8B");
+
 
 
 
@@ -1889,13 +2130,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function AdminDashboardComponent_app_admin_fyp_batches_40_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-fyp-batches", 28);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-fyp-batches", 29);
 } if (rf & 2) {
     const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("batches", ctx_r0.batches);
 } }
 function AdminDashboardComponent_app_admin_supervisors_41_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-supervisors");
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-supervisors", 30);
+} if (rf & 2) {
+    const ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("supervisors", ctx_r1.supervisors)("batches", ctx_r1.batches);
 } }
 function AdminDashboardComponent_app_admin_students_42_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-students");
@@ -1907,7 +2151,7 @@ function AdminDashboardComponent_app_admin_notifications_44_Template(rf, ctx) { 
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-notifications");
 } }
 function AdminDashboardComponent_app_admin_settings_45_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-settings", 29);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-admin-settings", 31);
 } if (rf & 2) {
     const ctx_r5 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("admin", ctx_r5.admin);
@@ -1934,6 +2178,10 @@ class AdminDashboardComponent {
             this.admin.Username = res.Username;
             this.greetingMessage = 'Welcome, ' + this.admin.FullName;
         }, (error) => { console.log(error); });
+        this.api.getSupervisors().subscribe((res) => {
+            this.supervisors = new Array();
+            this.setSupervisors(res);
+        }, (error) => { console.log(error); });
     }
     changeComponent(currentComponent) {
         this.currentComponent = currentComponent;
@@ -1956,9 +2204,16 @@ class AdminDashboardComponent {
             this.batches.push(batch);
         });
     }
+    setSupervisors(res) {
+        res.forEach(e => {
+            let supervisor = new src_app_models_supervisor_model__WEBPACK_IMPORTED_MODULE_3__["Supervisor"]();
+            supervisor.assignValues(e);
+            this.supervisors.push(supervisor);
+        });
+    }
 }
-AdminDashboardComponent.ɵfac = function AdminDashboardComponent_Factory(t) { return new (t || AdminDashboardComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_api_service__WEBPACK_IMPORTED_MODULE_3__["ApiService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"])); };
-AdminDashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AdminDashboardComponent, selectors: [["app-admin-dashboard"]], decls: 50, vars: 10, consts: [[1, "wrapper", "d-flex", "text-white", 3, "ngClass"], [1, "bg-dark", "d-flex", "flex-column", "sidebar-wrapper"], [1, "sidebar-heading"], [1, "list-group", "list-group-flush"], [1, "list-group-item", "list-group-item-action", "bg-dark", "text-white", 3, "click"], ["type", "button", "data-toggle", "modal", "data-target", "#adminSignOutModal", 1, "btn", "btn-danger", "mt-auto", "mb-2", "mx-2"], [1, "d-flex", "flex-column", "page-content-wrapper"], [1, "navbar", "navbar-expand-lg", "navbar-light", "bg-dark", "p-3"], [1, "font-weight-normal", "my-auto"], ["id", "menu-toggle", "type", "button", "data-toggle", "collapse", 1, "navbar-toggler", 3, "click"], [1, "navbar-toggler-icon"], [1, "collapse", "navbar-collapse"], [1, "navbar-nav", "ml-auto", "mt-2", "mt-lg-0"], [1, "nav-item", 3, "innerHTML"], ["id", "adminSignOutModal", "tabindex", "-1", "role", "dialog", 1, "modal", "fade"], ["role", "document", 1, "modal-dialog"], [1, "modal-content"], [1, "modal-header"], ["id", "adminSignOutModalLabel", 1, "modal-title", "text-dark"], [1, "modal-footer"], ["type", "submit", "data-dismiss", "modal", 1, "btn", "btn-primary", 3, "click"], ["type", "button", "data-dismiss", "modal", 1, "btn", "btn-secondary"], [1, "page-content", 3, "click"], [3, "batches", 4, "ngIf"], [4, "ngIf"], [3, "admin", 4, "ngIf"], [1, "py-3", "bg-dark"], [1, "container", "text-center"], [3, "batches"], [3, "admin"]], template: function AdminDashboardComponent_Template(rf, ctx) { if (rf & 1) {
+AdminDashboardComponent.ɵfac = function AdminDashboardComponent_Factory(t) { return new (t || AdminDashboardComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_services_api_service__WEBPACK_IMPORTED_MODULE_4__["ApiService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"])); };
+AdminDashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AdminDashboardComponent, selectors: [["app-admin-dashboard"]], decls: 50, vars: 10, consts: [[1, "wrapper", "d-flex", "text-white", 3, "ngClass"], [1, "bg-dark", "d-flex", "flex-column", "sidebar-wrapper"], [1, "sidebar-heading"], [1, "list-group", "list-group-flush"], [1, "list-group-item", "list-group-item-action", "bg-dark", "text-white", 3, "click"], ["type", "button", "data-toggle", "modal", "data-target", "#adminSignOutModal", 1, "btn", "btn-danger", "mt-auto", "mb-2", "mx-2"], [1, "d-flex", "flex-column", "page-content-wrapper"], [1, "navbar", "navbar-expand-lg", "navbar-light", "bg-dark", "p-3"], [1, "font-weight-normal", "my-auto"], ["id", "menu-toggle", "type", "button", "data-toggle", "collapse", 1, "navbar-toggler", 3, "click"], [1, "navbar-toggler-icon"], [1, "collapse", "navbar-collapse"], [1, "navbar-nav", "ml-auto", "mt-2", "mt-lg-0"], [1, "nav-item", 3, "innerHTML"], ["id", "adminSignOutModal", "tabindex", "-1", "role", "dialog", 1, "modal", "fade"], ["role", "document", 1, "modal-dialog"], [1, "modal-content"], [1, "modal-header"], ["id", "adminSignOutModalLabel", 1, "modal-title", "text-dark"], [1, "modal-footer"], ["type", "submit", "data-dismiss", "modal", 1, "btn", "btn-primary", 3, "click"], ["type", "button", "data-dismiss", "modal", 1, "btn", "btn-secondary"], [1, "page-content", 3, "click"], [3, "batches", 4, "ngIf"], [3, "supervisors", "batches", 4, "ngIf"], [4, "ngIf"], [3, "admin", 4, "ngIf"], [1, "py-3", "bg-dark"], [1, "container", "text-center"], [3, "batches"], [3, "supervisors", "batches"], [3, "admin"]], template: function AdminDashboardComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 2);
@@ -2032,14 +2287,14 @@ AdminDashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵ
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](39, "div", 22);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AdminDashboardComponent_Template_div_click_39_listener() { return ctx.closeMenu(); });
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](40, AdminDashboardComponent_app_admin_fyp_batches_40_Template, 1, 1, "app-admin-fyp-batches", 23);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](41, AdminDashboardComponent_app_admin_supervisors_41_Template, 1, 0, "app-admin-supervisors", 24);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](42, AdminDashboardComponent_app_admin_students_42_Template, 1, 0, "app-admin-students", 24);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](43, AdminDashboardComponent_app_admin_groups_43_Template, 1, 0, "app-admin-groups", 24);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](44, AdminDashboardComponent_app_admin_notifications_44_Template, 1, 0, "app-admin-notifications", 24);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](45, AdminDashboardComponent_app_admin_settings_45_Template, 1, 1, "app-admin-settings", 25);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](41, AdminDashboardComponent_app_admin_supervisors_41_Template, 1, 2, "app-admin-supervisors", 24);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](42, AdminDashboardComponent_app_admin_students_42_Template, 1, 0, "app-admin-students", 25);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](43, AdminDashboardComponent_app_admin_groups_43_Template, 1, 0, "app-admin-groups", 25);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](44, AdminDashboardComponent_app_admin_notifications_44_Template, 1, 0, "app-admin-notifications", 25);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](45, AdminDashboardComponent_app_admin_settings_45_Template, 1, 1, "app-admin-settings", 26);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](46, "footer", 26);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](47, "div", 27);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](46, "footer", 27);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](47, "div", 28);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](48, "small");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](49, "Made by Tehniat and Hassaan under supervision of Sir Imran Ihsan. Copyright \u00A9 2020.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -2063,7 +2318,7 @@ AdminDashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵ
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.currentComponent === 4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.currentComponent === 5);
-    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_5__["NgClass"], _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], _admin_fyp_batches_admin_fyp_batches_component__WEBPACK_IMPORTED_MODULE_6__["AdminFypBatchesComponent"], _admin_supervisors_admin_supervisors_component__WEBPACK_IMPORTED_MODULE_7__["AdminSupervisorsComponent"], _admin_students_admin_students_component__WEBPACK_IMPORTED_MODULE_8__["AdminStudentsComponent"], _admin_groups_admin_groups_component__WEBPACK_IMPORTED_MODULE_9__["AdminGroupsComponent"], _admin_notifications_admin_notifications_component__WEBPACK_IMPORTED_MODULE_10__["AdminNotificationsComponent"], _admin_settings_admin_settings_component__WEBPACK_IMPORTED_MODULE_11__["AdminSettingsComponent"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvYWRtaW4vYWRtaW4tZGFzaGJvYXJkL2FkbWluLWRhc2hib2FyZC5jb21wb25lbnQuc2NzcyJ9 */"] });
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_6__["NgClass"], _angular_common__WEBPACK_IMPORTED_MODULE_6__["NgIf"], _admin_fyp_batches_admin_fyp_batches_component__WEBPACK_IMPORTED_MODULE_7__["AdminFypBatchesComponent"], _admin_supervisors_admin_supervisors_component__WEBPACK_IMPORTED_MODULE_8__["AdminSupervisorsComponent"], _admin_students_admin_students_component__WEBPACK_IMPORTED_MODULE_9__["AdminStudentsComponent"], _admin_groups_admin_groups_component__WEBPACK_IMPORTED_MODULE_10__["AdminGroupsComponent"], _admin_notifications_admin_notifications_component__WEBPACK_IMPORTED_MODULE_11__["AdminNotificationsComponent"], _admin_settings_admin_settings_component__WEBPACK_IMPORTED_MODULE_12__["AdminSettingsComponent"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvYWRtaW4vYWRtaW4tZGFzaGJvYXJkL2FkbWluLWRhc2hib2FyZC5jb21wb25lbnQuc2NzcyJ9 */"] });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AdminDashboardComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -2071,7 +2326,31 @@ AdminDashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵ
                 templateUrl: './admin-dashboard.component.html',
                 styleUrls: ['./admin-dashboard.component.scss']
             }]
-    }], function () { return [{ type: src_app_services_api_service__WEBPACK_IMPORTED_MODULE_3__["ApiService"] }, { type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"] }]; }, null); })();
+    }], function () { return [{ type: src_app_services_api_service__WEBPACK_IMPORTED_MODULE_4__["ApiService"] }, { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] }]; }, null); })();
+
+
+/***/ }),
+
+/***/ "gZgQ":
+/*!********************************************!*\
+  !*** ./src/app/models/supervisor.model.ts ***!
+  \********************************************/
+/*! exports provided: Supervisor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Supervisor", function() { return Supervisor; });
+class Supervisor {
+    constructor() {
+        this.FullName = '';
+        this.Username = '';
+    }
+    assignValues(res) {
+        this.FullName = res.FullName;
+        this.Username = res.Username;
+    }
+}
 
 
 /***/ }),
@@ -2138,18 +2417,37 @@ class Batch {
         this.Year = 0;
         this.Program = '';
         this.Phase = 1;
+        this.Supervisors = new Array();
+        this.Students = new Array();
     }
     assignValues(res) {
         this.Year = res.Year;
         this.Program = res.Program;
         this.Phase = res.Phase;
-        // if (res.Supervisors.length !== 0) {
-        // }
-        // if (res.Students.lenth !== 0) {
-        //     res.Students.forEach(e => {
-        //         this.Students.push(e);
-        //     });
-        // }
+        for (let i = 0; i < res.Supervisors.length; i++) {
+            this.Supervisors.push({
+                Username: res.Supervisors[i].Username,
+                Proposals: new Array()
+            });
+        }
+    }
+}
+class Supervisor {
+    constructor() {
+        this.Username = '';
+        this.Proposals = new Array();
+    }
+}
+class Proposal {
+    constructor() {
+        this.Domain = '';
+        this.Title = '';
+        this.Abstract = '';
+    }
+}
+class Student {
+    constructor() {
+        this.RollNumber = 0;
     }
 }
 
@@ -2160,10 +2458,10 @@ class Batch {
 /*!*****************************!*\
   !*** ./src/assets/api.json ***!
   \*****************************/
-/*! exports provided: loginAdmin, updateAdmin, getAdmin, createBatch, promoteBatch, deleteBatch, getBatches, default */
+/*! exports provided: loginAdmin, updateAdmin, getAdmin, createBatch, promoteBatch, deleteBatch, getBatches, addSupervisorToBatch, addSupervisor, deleteSupervisor, getSupervisors, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"loginAdmin\":\"http://localhost:4000/api/admin/login\",\"updateAdmin\":\"http://localhost:4000/api/admin/update\",\"getAdmin\":\"http://localhost:4000/api/admin/get\",\"createBatch\":\"http://localhost:4000/api/batch/create\",\"promoteBatch\":\"http://localhost:4000/api/batch/promote\",\"deleteBatch\":\"http://localhost:4000/api/batch/delete\",\"getBatches\":\"http://localhost:4000/api/batch/all\"}");
+module.exports = JSON.parse("{\"loginAdmin\":\"http://localhost:4000/api/admin/login\",\"updateAdmin\":\"http://localhost:4000/api/admin/update\",\"getAdmin\":\"http://localhost:4000/api/admin/get\",\"createBatch\":\"http://localhost:4000/api/batch/create\",\"promoteBatch\":\"http://localhost:4000/api/batch/promote\",\"deleteBatch\":\"http://localhost:4000/api/batch/delete\",\"getBatches\":\"http://localhost:4000/api/batch/all\",\"addSupervisorToBatch\":\"http://localhost:4000/api/batch/add/supervisor\",\"addSupervisor\":\"http://localhost:4000/api/supervisor/add\",\"deleteSupervisor\":\"http://localhost:4000/api/supervisor/delete\",\"getSupervisors\":\"http://localhost:4000/api/supervisor/all\"}");
 
 /***/ }),
 

@@ -10,7 +10,7 @@ const helperRouter = require('./routes/helper.router');
 const errorHandler = require('./helpers/error-handler');
 
 const app = express();
-const PORT = process.env.PORT || 8888;
+const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));

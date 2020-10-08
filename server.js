@@ -27,6 +27,10 @@ app.get('/', (req,res) => {
   res.sendFile(process.cwd() + '/client/');
 });
 
+app.get('*', (req,res) => {
+  res.redirect('/');
+});
+
 app.listen(PORT, () => {
     console.log('Server running on port ' + PORT);
 });

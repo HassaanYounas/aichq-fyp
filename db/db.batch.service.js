@@ -30,9 +30,9 @@ async function getBatches() {
 async function addSupervisorToBatch(params) {
     if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
         if (await Batch.findOne({ 
-                Year: params.Year, 
-                Program: params.Program,
-                'Supervisors.Username': params.Username
+            Year: params.Year, 
+            Program: params.Program,
+            'Supervisors.Username': params.Username
         })) throw 'Supervisor Already Exists in Batch.';
         return await Batch.updateOne(
             { Year: params.Year, Program: params.Program }, 
@@ -44,10 +44,63 @@ async function addSupervisorToBatch(params) {
     } else throw 'Batch Does Not Exist.';
 }
 
+async function deleteSupervisorFromBatch(params) {
+    if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
+        if (await Batch.findOne({ 
+            Year: params.Year, 
+            Program: params.Program,
+            'Supervisors.Username': params.Username
+        })) {
+            return await Batch.updateOne(
+                { Year: params.Year, Program: params.Program }, 
+                { $pull: { Supervisors: {
+                    Username: params.Username
+                } } }
+            );
+        } throw 'Supervisor Does Not Exist.';
+    } else throw 'Batch Does Not Exist.';
+}
+
+async function addStudentToBatch(params) {
+    if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
+        if (await Batch.findOne({
+            Year: params.Year, 
+            Program: params.Program, 
+            'Students.RollNumber': params.RollNumber
+        })) throw 'Student Already Exists in Batch.';
+        return await Batch.updateOne(
+            { Year: params.Year, Program: params.Program }, 
+            { $push: { Students: {
+                RollNumber: params.RollNumber
+            } } }
+        );
+    } else throw 'Batch Does Not Exist.';
+}
+
+async function deleteStudentFromBatch(params) {
+    if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
+        if (await Batch.findOne({ 
+            Year: params.Year, 
+            Program: params.Program,
+            'Students.RollNumber': params.RollNumber
+        })) {
+            return await Batch.updateOne(
+                { Year: params.Year, Program: params.Program }, 
+                { $pull: { Students: {
+                    RollNumber: params.RollNumber
+                } } }
+            );
+        } throw 'Student Does Not Exist.';
+    } else throw 'Batch Does Not Exist.';
+}
+
 module.exports = {
     createBatch,
     promoteBatch,
     deleteBatch,
     getBatches,
-    addSupervisorToBatch
+    addSupervisorToBatch,
+    deleteSupervisorFromBatch,
+    addStudentToBatch,
+    deleteStudentFromBatch
 }

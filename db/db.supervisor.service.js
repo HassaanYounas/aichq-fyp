@@ -4,6 +4,15 @@ const config = require('../helpers/config.json');
 const { Supervisor } = require('../models/index');
 const mongoose = require('./mongoose');
 
+async function loginSupervisor(params) {
+    const supervisor = await Supervisor.findOne({ Username: params.Username });
+    if (supervisor && bcrypt.compareSync(params.Password, supervisor.Password)) {
+        const { Password, ...supervisorWithoutPassword } = supervisor.toObject();
+        const token = jwt.sign({ sub: supervisor.id }, config.secret);
+        return { ...supervisorWithoutPassword, token };
+    } throw 'Invalid Username or Password.';
+}
+
 async function addSupervisor(params) {
     if (await Supervisor.findOne({ Username: params.Username })) throw 'Username Already Exists.';
     else {
@@ -26,6 +35,7 @@ async function getSupervisors() {
 }
 
 module.exports = {
+    loginSupervisor,
     addSupervisor,
     deleteSupervisor,
     getSupervisors

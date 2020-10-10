@@ -34,3 +34,28 @@ app.get('*', (req,res) => {
 app.listen(PORT, () => {
     console.log('Server running on port ' + PORT);
 });
+
+// const nodemailer = require('nodemailer');
+
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'aichq.fyp@gmail.com',
+//     pass: 'HTAichQ@123'
+//   }
+// });
+
+// const mailOptions = {
+//   from: 'aichq.fyp@gmail.com',
+//   to: '170273@students.au.edu.pk, 170349@students.au.edu.pk',
+//   subject: 'Test Email',
+//   text: 'Aur Sunao?'
+// };
+
+// transporter.sendMail(mailOptions, function(error, info){
+//   if (error) {
+// 	console.log(error);
+//   } else {
+//     console.log('Email sent: ' + info.response);
+//   }
+// });

@@ -1,4 +1,4 @@
-const { Admin, Batch, Group, Supervisor } = require('../models/index');
+const { Admin, Batch, Group, Supervisor, GroupToken } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function getEverything() {
@@ -6,7 +6,8 @@ async function getEverything() {
         Admin.find(), 
         Batch.find(),
         Group.find(),
-        Supervisor.find()
+        Supervisor.find(),
+        GroupToken.find()
     ]);
 }
 
@@ -15,7 +16,8 @@ async function clearDB() {
         Admin.deleteMany(), 
         Batch.deleteMany(),
         Group.deleteMany(),
-        Supervisor.deleteMany()
+        Supervisor.deleteMany(),
+        GroupToken.deleteMany()
     ]);
 }
 

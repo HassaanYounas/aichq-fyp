@@ -10,11 +10,11 @@ async function loginSupervisor(params) {
         const { Password, ...supervisorWithoutPassword } = supervisor.toObject();
         const token = jwt.sign({ sub: supervisor.id }, config.secret);
         return { ...supervisorWithoutPassword, token };
-    } throw 'Invalid Username or Password.';
+    } throw 'Invalid username or password.';
 }
 
 async function addSupervisor(params) {
-    if (await Supervisor.findOne({ Username: params.Username })) throw 'Username Already Exists.';
+    if (await Supervisor.findOne({ Username: params.Username })) throw 'Username already exists.';
     else {
         const supervisor = new Supervisor(params);
         supervisor.Password = bcrypt.hashSync(supervisor.Password, 10);
@@ -27,7 +27,7 @@ async function deleteSupervisor(params) {
         await Supervisor.deleteOne({ Username: params.Username }, err => {
             if (err) throw err;
         });
-    } else throw 'Supervisor Does Not Exist.';
+    } else throw 'Supervisor does not exist.';
 }
 
 async function getSupervisors() {

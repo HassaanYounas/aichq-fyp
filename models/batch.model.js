@@ -1,47 +1,20 @@
 const mongoose = require('mongoose');
 
 const BatchSchema = new mongoose.Schema({
-    Year: {
-        type: Number,
-        require: true
-    },
-    Program: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    Phase: {
-        type: Number,
-        required: true
-    },
-    Completed: {
-        type: Boolean,
-        default: false
-    },
+    Year: Number,
+    Program: String,
+    Phase: Number,
+    Completed: { type: Boolean, default: false },
     Supervisors: [{
-        Username: {
-            type: String,
-            trim: true
-        },
+        Username: String,
         Proposals: [{
-            Domain: {
-                type: String,
-                trim: true
-            },
-            Title: {
-                type: String,
-                trim: true
-            },
-            Abstract: {
-                type: String,
-                trim: true
-            }
+            Title: String,
+            Abstract: String,
+            Domain: String
         }]
     }],
     Students: [{
-        RollNumber: {
-            type: Number
-        }
+        RollNumber: Number
     }]
 });
 

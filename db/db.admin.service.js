@@ -16,7 +16,7 @@ async function loginAdmin(params) {
         const { Password, ...adminWithoutPassword } = admin.toObject();
         const token = jwt.sign({ sub: admin.id }, config.secret);
         return { ...adminWithoutPassword, token };
-    } throw 'Invalid Username or Password.';
+    } throw 'Invalid username or password.';
 }
 
 async function updateAdmin(params) {

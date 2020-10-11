@@ -3,7 +3,7 @@ const mongoose = require('./mongoose');
 
 async function createBatch(params) {
     if (await Batch.findOne({ Year: params.Year, Program: params.Program })) 
-        throw 'Batch Already Exists.';
+        throw 'Batch already exists.';
     const batch = new Batch(params);
     return await batch.save();
 }
@@ -20,7 +20,7 @@ async function deleteBatch(params) {
         await Batch.deleteOne({ Year: params.Year, Program: params.Program }, err => {
             if (err) throw err;
         });
-    } else throw 'Batch Does Not Exist.';
+    } else throw 'Batch does not exist.';
 }
 
 async function getBatches() {
@@ -33,7 +33,7 @@ async function addSupervisorToBatch(params) {
             Year: params.Year, 
             Program: params.Program,
             'Supervisors.Username': params.Username
-        })) throw 'Supervisor Already Exists in Batch.';
+        })) throw 'Supervisor already exists in batch.';
         return await Batch.updateOne(
             { Year: params.Year, Program: params.Program }, 
             { $push: { Supervisors: {
@@ -41,7 +41,7 @@ async function addSupervisorToBatch(params) {
                 Proposals: []
             } } }
         );
-    } else throw 'Batch Does Not Exist.';
+    } else throw 'Batch does not exist.';
 }
 
 async function deleteSupervisorFromBatch(params) {
@@ -57,8 +57,8 @@ async function deleteSupervisorFromBatch(params) {
                     Username: params.Username
                 } } }
             );
-        } throw 'Supervisor Does Not Exist.';
-    } else throw 'Batch Does Not Exist.';
+        } throw 'Supervisor does not exist.';
+    } else throw 'Batch does not exist.';
 }
 
 async function addStudentToBatch(params) {
@@ -67,14 +67,14 @@ async function addStudentToBatch(params) {
             Year: params.Year, 
             Program: params.Program, 
             'Students.RollNumber': params.RollNumber
-        })) throw 'Student Already Exists in Batch.';
+        })) throw 'Student already exists in batch.';
         return await Batch.updateOne(
             { Year: params.Year, Program: params.Program }, 
             { $push: { Students: {
                 RollNumber: params.RollNumber
             } } }
         );
-    } else throw 'Batch Does Not Exist.';
+    } else throw 'Batch does not exist.';
 }
 
 async function deleteStudentFromBatch(params) {
@@ -90,8 +90,8 @@ async function deleteStudentFromBatch(params) {
                     RollNumber: params.RollNumber
                 } } }
             );
-        } throw 'Student Does Not Exist.';
-    } else throw 'Batch Does Not Exist.';
+        } throw 'Student does not exist.';
+    } else throw 'Batch does not exist.';
 }
 
 module.exports = {

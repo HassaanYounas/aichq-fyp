@@ -1,113 +1,35 @@
 const mongoose = require('mongoose');
 
 const GroupSchema = new mongoose.Schema({
-    Year: {
-        type: Number,
-        require: true
-    },
-    Program: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    Status: {
-        type: String,
-        required: true,
-        trim: true,
-        default: 'Pending'
-    },
-    TeamName: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    Password: {
-        type: String,
-        required: true,
-        trim: true,
-        minlength: 8
-    },
+    Year: Number,
+    Program: String,
+    TeamName: String,
+    Password: String,
     StudentOne: {
-        Name: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        RollNumber: {
-            type: Number,
-            required: true
-        },
-        Email: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        Contact: {
-            type: Number,
-            required: true
-        },
-        CGPA: {
-            type: String,
-            required: true
-        }
+        Name: String,
+        RollNumber: Number,
+        Email: String,
+        Contact: String,
+        CGPA: String,
+        Verified: { type: Boolean, default: false }
     },
     StudentTwo: {
-        Name: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        RollNumber: {
-            type: Number,
-            required: true
-        },
-        Email: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        Contact: {
-            type: Number,
-            required: true
-        },
-        CGPA: {
-            type: String,
-            required: true
-        }
+        Name: String,
+        RollNumber: Number,
+        Email: String,
+        Contact: String,
+        CGPA: String,
+        Verified: { type: Boolean, default: false }
     },
     Proposals: [{
-        Domain: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        Title: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        Abstract: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        SupervisorUsername: {
-            type: String,
-            required: true,
-            trim: true
-        }
+        Domain: String,
+        Title: String,
+        Abstract: String,
+        SupervisorUsername: String
     }],
-    Supervisor: {
-        type: String,
-        trim: true
-    },
-    Project: {
-        type: String,
-        trim: true
-    },
-    ProjectID: {
-        type: Number
-    }
+    Supervisor: String,
+    ProjectName: String,
+    ProjectID: Number
 });
 
 GroupSchema.set('toJSON', { virtuals: true });

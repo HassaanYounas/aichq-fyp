@@ -55,7 +55,7 @@ async function registerGroup(params, req) {
                 sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
                 sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
             } catch (err) {
-                throw err;
+                throw 'Unable to send email. Please try again.';
             }
             if (await Group.findOne({ GroupUsername: params.GroupUsername })) throw 'Team name already exists.';
             const group = new Group(params);

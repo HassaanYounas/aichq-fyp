@@ -26,7 +26,7 @@ async function sendEmail(Student, Program, Year, Host, StudentNumber, OtherStude
         text:
             'Hello, ' + Student.Name + ' (' + Student.RollNumber + ').' + '\n\n' +
             'By clicking on the link below you agree to make FYP Group with ' + OtherStudent.Name + ' (' + OtherStudent.RollNumber + '):\n\n' +
-            'https:\/\/' + Host + '\/api\/group\/verify\/' 
+            'http:\/\/' + Host + '\/api\/group\/verify\/' 
             + Student.RollNumber + '\/'+ Program + '\/' 
             + Year + '\/' + groupToken.Token + '\/' + StudentNumber + '\n'
     };
@@ -75,27 +75,21 @@ async function verifyGroup(params) {
     } throw 'Link is either invalid or has expired.';
 }
 
-async function resendTokenGroup(params) {
-    const batch = await Batch.findOne({ Year: params.Year, Program: params.Program });
-    if (batch) {
-        let count = 0;
-        const students = batch.Students;
-        for (let i = 0; i < students.length; i++) {
-            if (parseInt(students[i].RollNumber) === parseInt(params.StudentOne.RollNumber) ||
-                parseInt(students[i].RollNumber) === parseInt(params.StudentTwo.RollNumber)   
-            ) count++;
+async function resendTokenGroup(params, req) {
+    if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
+        if (await GroupToken.findOne({ RollNumber: params.StudentOne.RollNumber })) {
+            await GroupToken.deleteOne({ RollNumber: params.StudentOne.RollNumber }, err => {
+                throw err;
+            });
         }
-        if (count === 2) {
-            if (await Group.findOne({
-                'StudentOne.RollNumber': params.StudentOne.RollNumber,
-                'StudentTwo.RollNumber': params.StudentTwo.RollNumber,
-            })) throw 'Group already exists.';
-            sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
-            sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
-            const group = new Group(params);
-            group.Password = bcrypt.hashSync(group.Password, 10);
-            return await group.save();
-        } else throw 'One of the roll numbers does not exist in batch.';
+        if (await GroupToken.findOne({ RollNumber: params.StudentTwo.RollNumber })) {
+            await GroupToken.deleteOne({ RollNumber: params.StudentTwo.RollNumber }, err => {
+                throw err;
+            });
+        }
+        sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
+        sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
+        return {};
     } else throw 'Batch does not exist.';
 }
 

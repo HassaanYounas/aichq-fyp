@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post('/reg', registerGroup);
 router.get('/verify/:RollNumber/:Program/:Year/:Token/:Student', verifyGroup);
+router.post('/verify/resend', resendTokenGroup);
 
 function registerGroup(req, res, next) {
     groupService.registerGroup(req.body, req).then(({}) => {
@@ -14,6 +15,12 @@ function registerGroup(req, res, next) {
 function verifyGroup(req, res, next) {
     groupService.verifyGroup(req.params).then(() => {
         res.json({ 'message': 'Verification successful.' });
+    }).catch(err => next(err)); 
+}
+
+function resendTokenGroup(req, res, next) {
+    groupService.resendTokenGroup(req.body, req).then(({}) => {
+        res.json({});
     }).catch(err => next(err)); 
 }
 

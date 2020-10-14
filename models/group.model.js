@@ -4,10 +4,11 @@ const GroupSchema = new mongoose.Schema({
     Year: Number,
     Program: String,
     TeamName: String,
+    GroupUsername: String,
     Password: String,
     StudentOne: {
         Name: String,
-        RollNumber: Number,
+        RollNumber: String,
         Email: String,
         Contact: String,
         CGPA: String,
@@ -15,7 +16,7 @@ const GroupSchema = new mongoose.Schema({
     },
     StudentTwo: {
         Name: String,
-        RollNumber: Number,
+        RollNumber: String,
         Email: String,
         Contact: String,
         CGPA: String,

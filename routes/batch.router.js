@@ -6,6 +6,7 @@ router.post('/create', createBatch);
 router.post('/promote', promoteBatch);
 router.post('/delete', deleteBatch);
 router.post('/all', getBatches);
+router.post('/all/slim', getSlimBatches);
 router.post('/add/supervisor', addSupervisorToBatch);
 router.post('/delete/supervisor', deleteSupervisorFromBatch);
 router.post('/add/student', addStudentToBatch);
@@ -31,6 +32,12 @@ function deleteBatch(req, res, next) {
 
 function getBatches(req, res, next) {
     batchService.getBatches().then((batches) => {
+        res.json(batches);
+    }).catch(err => next(err)); 
+}
+
+function getSlimBatches(req, res, next) {
+    batchService.getSlimBatches().then((batches) => {
         res.json(batches);
     }).catch(err => next(err)); 
 }

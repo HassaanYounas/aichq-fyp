@@ -27,6 +27,14 @@ async function getBatches() {
     return await Batch.find();
 }
 
+async function getSlimBatches() {
+    const batches = await Batch.find();
+    let slimBatches = [];
+    batches.forEach(batch => {
+        slimBatches.push({ Year: batch.Year, Program: batch.Program });
+    }); return slimBatches;
+}
+
 async function addSupervisorToBatch(params) {
     if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
         if (await Batch.findOne({ 
@@ -99,6 +107,7 @@ module.exports = {
     promoteBatch,
     deleteBatch,
     getBatches,
+    getSlimBatches,
     addSupervisorToBatch,
     deleteSupervisorFromBatch,
     addStudentToBatch,

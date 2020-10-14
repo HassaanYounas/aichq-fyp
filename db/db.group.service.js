@@ -17,10 +17,10 @@ function generateToken(length) {
 async function sendEmail(Student, Program, Year, Host, StudentNumber, OtherStudent) {
     const groupToken = new GroupToken({ RollNumber: Student.RollNumber, Token: generateToken(64)});
     const transporter = nodemailer.createTransport({
-        service: 'gmail', auth: { user: 'aichq.fyp@gmail.com', pass: 'HTAichQ@123' }
+        service: 'zoho', auth: { user: 'aichq.fyp@zohomail.com', pass: 'HTAichQ@123' }
     });
     let mailOptions = {
-        from: 'no-reply@aichq.com',
+        from: 'aichq.fyp@zohomail.com',
         to: Student.Email,
         subject: 'AichQ | FYP Group Verfication | Request from ' + OtherStudent.Name,
         text:
@@ -30,7 +30,9 @@ async function sendEmail(Student, Program, Year, Host, StudentNumber, OtherStude
             + Student.RollNumber + '\/'+ Program + '\/' 
             + Year + '\/' + groupToken.Token + '\/' + StudentNumber + '\n'
     };
-    transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) throw 'Unable to send email. Please try again.';
+    });
     return await groupToken.save();
 }
 
@@ -49,9 +51,13 @@ async function registerGroup(params, req) {
                 'StudentOne.RollNumber': params.StudentOne.RollNumber,
                 'StudentTwo.RollNumber': params.StudentTwo.RollNumber,
             })) throw 'Group already exists.';
-            sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
-            sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
-            if (await Group.findOne({ TeamName: params.TeamName })) throw 'Team name already exists.';
+            try {
+                sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
+                sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
+            } catch (err) {
+                throw err;
+            }
+            if (await Group.findOne({ GroupUsername: params.GroupUsername })) throw 'Team name already exists.';
             const group = new Group(params);
             group.Password = bcrypt.hashSync(group.Password, 10);
             return await group.save();
@@ -62,15 +68,21 @@ async function registerGroup(params, req) {
 async function verifyGroup(params) {
     if (await GroupToken.findOne({ RollNumber: params.RollNumber, Token: params.Token })) {
         if (params.Student === 'One') {
-            return await Group.updateOne(
+            await Group.updateOne(
                 { Year: params.Year, Program: params.Program, 'StudentOne.RollNumber': params.RollNumber }, 
                 { 'StudentOne.Verified': true }
             );
+            return await GroupToken.deleteOne({ RollNumber: params.RollNumber }, err => {
+                throw err;
+            });
         } else if (params.Student === 'Two'){
-            return await Group.updateOne(
+            await Group.updateOne(
                 { Year: params.Year, Program: params.Program, 'StudentTwo.RollNumber': params.RollNumber }, 
                 { 'StudentTwo.Verified': true }
             );
+            return await GroupToken.deleteOne({ RollNumber: params.RollNumber }, err => {
+                throw err;
+            });
         }
     } throw 'Link is either invalid or has expired.';
 }

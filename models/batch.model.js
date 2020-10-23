@@ -1,21 +1,14 @@
 const mongoose = require('mongoose');
 
 const BatchSchema = new mongoose.Schema({
-    Year: Number,
-    Program: String,
-    Phase: Number,
-    Completed: { type: Boolean, default: false },
-    Supervisors: [{
-        Username: String,
-        Proposals: [{
-            Title: String,
-            Abstract: String,
-            Domain: String
-        }]
-    }],
-    Students: [{
-        RollNumber: Number
-    }]
+    Archived: {
+        type: Boolean,
+        default: false
+    },
+    Session: String,
+	Year: String,
+    Department: String,
+	Program: String
 });
 
 BatchSchema.set('toJSON', { virtuals: true });

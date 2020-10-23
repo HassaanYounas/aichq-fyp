@@ -3,5 +3,6 @@ module.exports = {
     Supervisor: require('./supervisor.model'),
     Batch: require('./batch.model'),
     Admin: require('./admin.model'),
-    GroupToken: require('./group-token.model')
+    GroupToken: require('./group-token.model'),
+    Department: require('./department.model')
 };

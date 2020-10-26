@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
 
 const SupervisorSchema = new mongoose.Schema({
-    Username: String,
+	Active: {
+		type: Boolean,
+		default: true
+	},
+	FullName: String,
+	Email: String,
 	Password: String,
-	FullName: String
+	Department: String,
+	Designation: String,
+    Proposals: [{
+        Domain: String,
+        Title: String,
+        Abstract: String
+	}]
 });
 
 SupervisorSchema.set('toJSON', { virtuals: true });

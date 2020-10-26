@@ -15,8 +15,9 @@
     "deleteStudentFromBatch": "http://localhost:8080/api/batch/delete/student",
     "loginSupervisor": "http://localhost:8080/api/supervisor/login",
     "addSupervisor": "http://localhost:8080/api/supervisor/add",
+    "addSupervisorsBulk": "http://localhost:8080/api/supervisor/add/bulk",
     "deleteSupervisor": "http://localhost:8080/api/supervisor/delete",
-    "getSupervisors": "http://localhost:8080/api/supervisor/all",
+    "getSupervisors": "http://localhost:8080/api/supervisor/get/all",
     "registerGroup": "http://localhost:8080/api/group/reg",
     "resendTokenGroup": "http://localhost:8080/api/verify/resend"
 }

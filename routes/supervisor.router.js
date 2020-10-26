@@ -2,16 +2,17 @@ const express = require('express');
 const supervisorService = require('../db/db.supervisor.service');
 const router = express.Router();
 
-router.post('/login', loginSupervisor);
+// router.post('/login', loginSupervisor);
 router.post('/add', addSupervisor);
-router.post('/delete', deleteSupervisor);
-router.post('/all', getSupervisors);
+router.post('/add/bulk', addSupervisorsBulk);
+// router.post('/delete', deleteSupervisor);
+router.post('/get/all', getSupervisors);
 
-function loginSupervisor(req, res, next) {
-    supervisorService.loginSupervisor(req.body).then((supervisor) => {
-        res.json(supervisor);
-    }).catch(err => next(err)); 
-}
+// function loginSupervisor(req, res, next) {
+//     supervisorService.loginSupervisor(req.body).then((supervisor) => {
+//         res.json(supervisor);
+//     }).catch(err => next(err)); 
+// }
 
 function addSupervisor(req, res, next) {
     supervisorService.addSupervisor(req.body).then(() => {
@@ -19,8 +20,8 @@ function addSupervisor(req, res, next) {
     }).catch(err => next(err)); 
 }
 
-function deleteSupervisor(req, res, next) {
-    supervisorService.deleteSupervisor(req.body).then(() => {
+function addSupervisorsBulk(req, res, next) {
+    supervisorService.addSupervisorsBulk(req.body).then(() => {
         res.json({});
     }).catch(err => next(err)); 
 }

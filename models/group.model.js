@@ -1,36 +1,38 @@
 const mongoose = require('mongoose');
 
 const GroupSchema = new mongoose.Schema({
-    Year: Number,
+    Department: String,
     Program: String,
+    Session: String,
+    Year: String,
     TeamName: String,
-    GroupUsername: String,
+    Username: String,
     Password: String,
+    ProjectID: Number,
     StudentOne: {
-        Name: String,
         RollNumber: String,
-        Email: String,
         Contact: String,
         CGPA: String,
-        Verified: { type: Boolean, default: false }
+        Verified: {
+            type: Boolean,
+            default: true
+        }
     },
     StudentTwo: {
-        Name: String,
         RollNumber: String,
-        Email: String,
         Contact: String,
         CGPA: String,
-        Verified: { type: Boolean, default: false }
+        Verified: {
+            type: Boolean,
+            default: true
+        }
     },
     Proposals: [{
         Domain: String,
         Title: String,
         Abstract: String,
         SupervisorUsername: String
-    }],
-    Supervisor: String,
-    ProjectName: String,
-    ProjectID: Number
+    }]
 });
 
 GroupSchema.set('toJSON', { virtuals: true });

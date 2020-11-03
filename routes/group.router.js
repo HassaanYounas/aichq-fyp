@@ -7,7 +7,7 @@ router.get('/verify/:RollNumber/:Program/:Year/:Token/:Student', verifyGroup);
 router.post('/verify/resend', resendTokenGroup);
 
 function registerGroup(req, res, next) {
-    groupService.registerGroup(req.body, req).then(({}) => {
+    groupService.registerGroup(req.body, req).then(() => {
         res.json({});
     }).catch(err => next(err)); 
 }
@@ -19,7 +19,7 @@ function verifyGroup(req, res, next) {
 }
 
 function resendTokenGroup(req, res, next) {
-    groupService.resendTokenGroup(req.body, req).then(({}) => {
+    groupService.resendTokenGroup(req.body, req).then(() => {
         res.json({});
     }).catch(err => next(err)); 
 }

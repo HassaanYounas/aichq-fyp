@@ -24,51 +24,37 @@ function sendEmail(supervisor) {
         subject: 'AichQ | FYP Supervisor | Account Information',
         text: `Respected ${supervisor.FullName},\n\nYou have been registered as an FYP Supervisor for ${supervisor.Department} department.\n\nYour login credentials for AichQ are:\nEmail: ${supervisor.Email}\nPassword: ${supervisor.Password}\n\nYou can access AichQ from here: aichq-fyp.herokuapp.com\n\nRegards, AichQ Team.`
     };
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, (error) => {
         if (error) throw 'Unable to send email. Please try again.';
     });
 }
 
-// async function loginSupervisor(params) {
-//     const supervisor = await Supervisor.findOne({ Username: params.Username });
-//     if (supervisor && bcrypt.compareSync(params.Password, supervisor.Password)) {
-//         const { Password, ...supervisorWithoutPassword } = supervisor.toObject();
-//         const token = jwt.sign({ sub: supervisor.id }, config.secret);
-//         return { ...supervisorWithoutPassword, token };
-//     } throw 'Invalid username or password.';
-// }
+async function loginSupervisor(params) {
+    const supervisor = await Supervisor.findOne({ Email: params.Email });
+    if (supervisor && bcrypt.compareSync(params.Password, supervisor.Password)) {
+        const { Password, ...supervisorWithoutPassword } = supervisor.toObject();
+        const token = jwt.sign({ sub: supervisor.id }, config.secret);
+        return { ...supervisorWithoutPassword, token };
+    } throw 'Invalid email or password.';
+}
 
 async function addSupervisor(params) {
-    // if (await Supervisor.findOne({ Email: params.Email })) throw 'Email already exists.';
-    // else {
+    if (await Supervisor.findOne({ Email: params.Email })) throw 'Email already exists.';
+    else {
         const supervisor = new Supervisor(params);
         supervisor.Password = generatePassword(8);
-        sendEmail(supervisor);
         supervisor.Password = bcrypt.hashSync(supervisor.Password, 10);
+        sendEmail(supervisor);
         return await supervisor.save();
-    // }
+    }
 }
-
-async function addSupervisorsBulk(params) {
-    return params.forEach(supervisor => addSupervisor(supervisor));
-}
-
-// async function deleteSupervisor(params) {
-//     if (await Supervisor.findOne({ Username: params.Username })) {
-//         await Supervisor.deleteOne({ Username: params.Username }, err => {
-//             if (err) throw err;
-//         });
-//     } else throw 'Supervisor does not exist.';
-// }
 
 async function getSupervisors() {
     return await Supervisor.find();
 }
 
 module.exports = {
-    // loginSupervisor,
+    loginSupervisor,
     addSupervisor,
-    addSupervisorsBulk,
-    // deleteSupervisor,
     getSupervisors
 }

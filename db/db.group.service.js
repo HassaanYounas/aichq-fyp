@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../helpers/config.json');
-const { Batch, Group, GroupToken } = require('../models/index');
+const { Student, Group, GroupToken } = require('../models/index');
 const mongoose = require('./mongoose');
 const nodemailer = require('nodemailer');
 
@@ -30,39 +28,70 @@ async function sendEmail(Student, Program, Year, Host, StudentNumber, OtherStude
             + Student.RollNumber + '\/'+ Program + '\/' 
             + Year + '\/' + groupToken.Token + '\/' + StudentNumber + '\n'
     };
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, (error) => {
         if (error) throw 'Unable to send email. Please try again.';
     });
     return await groupToken.save();
 }
 
 async function registerGroup(params, req) {
-    const batch = await Batch.findOne({ Year: params.Year, Program: params.Program });
-    if (batch) {
-        let count = 0;
-        const students = batch.Students;
-        for (let i = 0; i < students.length; i++) {
-            if (parseInt(students[i].RollNumber) === parseInt(params.StudentOne.RollNumber) ||
-                parseInt(students[i].RollNumber) === parseInt(params.StudentTwo.RollNumber)   
-            ) count++;
-        }
-        if (count === 2) {
-            if (await Group.findOne({
-                'StudentOne.RollNumber': params.StudentOne.RollNumber,
-                'StudentTwo.RollNumber': params.StudentTwo.RollNumber,
-            })) throw 'Group already exists.';
-            try {
-                sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
-                sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
-            } catch (err) {
-                throw 'Unable to send email. Please try again.';
+    if (
+        await Student.findOne({ 
+            Name: params.StudentOne.Name, 
+            RollNumber: params.StudentOne.RollNumber 
+        }) &&
+        await Student.findOne({ 
+            Name: params.StudentTwo.Name, 
+            RollNumber: params.StudentTwo.RollNumber 
+        })
+    ) {
+        if (await Group.findOne({ Username: params.Username })) throw 'Username already exists.';
+        else {
+            if (
+                await Group.findOne({ 
+                    'StudentOne.RollNumber': params.StudentOne.RollNumber,
+                    'StudentTwo.RollNumber': params.StudentTwo.RollNumber
+                }) || 
+                await Group.findOne({ 
+                    'StudentOne.RollNumber': params.StudentTwo.RollNumber,
+                    'StudentTwo.RollNumber': params.StudentOne.RollNumber
+                })
+            ) throw 'Group already exists. :(';
+            else {
+                if (
+                    await Group.findOne({ 
+                        'StudentOne.RollNumber': params.StudentOne.RollNumber,
+                        'StudentOne.Verified': true,
+                        'StudentTwo.Verified': true
+                    }) ||
+                    await Group.findOne({ 
+                        'StudentTwo.RollNumber': params.StudentOne.RollNumber,
+                        'StudentOne.Verified': true,
+                        'StudentTwo.Verified': true
+                    }) ||
+                    await Group.findOne({ 
+                        'StudentOne.RollNumber': params.StudentTwo.RollNumber,
+                        'StudentOne.Verified': true,
+                        'StudentTwo.Verified': true
+                    }) ||
+                    await Group.findOne({ 
+                        'StudentTwo.RollNumber': params.StudentTwo.RollNumber,
+                        'StudentOne.Verified': true,
+                        'StudentTwo.Verified': true
+                    })
+                ) throw 'One of the members has already verified their group. :(';
+                else {
+                    try {
+                        sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
+                        sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
+                        const group = new Group(params);
+                        group.Password = bcrypt.hashSync(group.Password, 10);
+                        return await group.save();
+                    } catch (err) { throw err; }
+                }
             }
-            if (await Group.findOne({ GroupUsername: params.GroupUsername })) throw 'Team name already exists.';
-            const group = new Group(params);
-            group.Password = bcrypt.hashSync(group.Password, 10);
-            return await group.save();
-        } else throw 'One of the roll numbers does not exist in batch.';
-    } else throw 'Batch does not exist.';
+        }
+    } throw 'One of the students does not exist.'
 }
 
 async function verifyGroup(params) {

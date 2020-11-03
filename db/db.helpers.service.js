@@ -1,14 +1,23 @@
-const { Admin, Department, Batch, Group, Supervisor, GroupToken } = require('../models/index');
+const { 
+    Admin, 
+    Department, 
+    Batch, 
+    Group, 
+    Supervisor, 
+    GroupToken,
+    Student
+} = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function getEverything() {
     return Promise.all([
-        Admin.find(),
-        Department.find(), 
-        Batch.find(),
-        Group.find(),
-        Supervisor.find(),
-        GroupToken.find()
+        // Admin.find(),
+        // Department.find(), 
+        // Batch.find(),
+        Group.find()
+        // Supervisor.find(),
+        // GroupToken.find(),
+        // Student.find()
     ]);
 }
 
@@ -19,7 +28,8 @@ async function clearDB() {
         Batch.deleteMany(),
         Group.deleteMany(),
         Supervisor.deleteMany(),
-        GroupToken.deleteMany()
+        GroupToken.deleteMany(),
+        Student.deleteMany()
     ]);
 }
 

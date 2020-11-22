@@ -1,6 +1,6 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const jwt = require('./helpers/jwt');
 const adminRouter = require('./routes/admin.router');

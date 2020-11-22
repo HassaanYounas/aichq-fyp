@@ -43,8 +43,8 @@ async function addSupervisor(params) {
     else {
         const supervisor = new Supervisor(params);
         supervisor.Password = generatePassword(8);
-        supervisor.Password = bcrypt.hashSync(supervisor.Password, 10);
         sendEmail(supervisor);
+        supervisor.Password = bcrypt.hashSync(supervisor.Password, 10);
         return await supervisor.save();
     }
 }

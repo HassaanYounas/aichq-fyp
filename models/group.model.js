@@ -12,20 +12,12 @@ const GroupSchema = new mongoose.Schema({
     StudentOne: {
         RollNumber: String,
         Contact: String,
-        CGPA: String,
-        Verified: {
-            type: Boolean,
-            default: true
-        }
+        CGPA: String
     },
     StudentTwo: {
         RollNumber: String,
         Contact: String,
-        CGPA: String,
-        Verified: {
-            type: Boolean,
-            default: true
-        }
+        CGPA: String
     },
     Proposals: [{
         Domain: String,

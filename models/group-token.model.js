@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const GroupTokenSchema = new mongoose.Schema({
-    RollNumber: Number,
+    RollNumber: String,
     Token: String,
-    CreatedAt: { type: Date, expires: '5m', default: Date.now }
+    CreatedAt: { type: Date, expires: '10080m', default: Date.now }
 });
 
 GroupTokenSchema.set('toJSON', { virtuals: true });

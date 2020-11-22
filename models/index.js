@@ -1,5 +1,6 @@
 module.exports = {
     Group: require('./group.model'),
+    PendingGroup: require('./pending-group.model'),
     Supervisor: require('./supervisor.model'),
     Student: require('./student.model'),
     Batch: require('./batch.model'),

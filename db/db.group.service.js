@@ -1,5 +1,7 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { Student, Group, GroupToken } = require('../models/index');
+const config = require('../helpers/config.json');
+const { Student, Group, PendingGroup, GroupToken } = require('../models/index');
 const mongoose = require('./mongoose');
 const nodemailer = require('nodemailer');
 
@@ -12,21 +14,30 @@ function generateToken(length) {
     } return result;
 }
 
-async function sendEmail(Student, Program, Year, Host, StudentNumber, OtherStudent) {
+async function loginGroup(params) {
+    const group = await Group.findOne({ Username: params.Username });
+    if (group && bcrypt.compareSync(params.Password, group.Password)) {
+        const { Password, ...groupWithoutPassword } = group.toObject();
+        const token = jwt.sign({ sub: group.id }, config.secret);
+        return { ...groupWithoutPassword, token };
+    } throw 'Invalid username or password.';
+}
+
+async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
     const groupToken = new GroupToken({ RollNumber: Student.RollNumber, Token: generateToken(64)});
     const transporter = nodemailer.createTransport({
         service: 'zoho', auth: { user: 'aichq.fyp@zohomail.com', pass: 'HTAichQ@123' }
     });
     let mailOptions = {
         from: 'aichq.fyp@zohomail.com',
-        to: Student.Email,
-        subject: 'AichQ | FYP Group Verfication | Request from ' + OtherStudent.Name,
+        to: '170273@students.au.edu.pk',
+        // to: Student.Email,
+        subject: 'AichQ | FYP Group Verfication | Request from ' + OtherStudent.FullName,
         text:
-            'Hello, ' + Student.Name + ' (' + Student.RollNumber + ').' + '\n\n' +
-            'By clicking on the link below you agree to make FYP Group with ' + OtherStudent.Name + ' (' + OtherStudent.RollNumber + '):\n\n' +
+            'Hello, ' + Student.FullName + ' (' + Student.RollNumber + ').' + '\n\n' +
+            'By clicking on the link below you agree to make FYP Group with ' + OtherStudent.FullName + ' (' + OtherStudent.RollNumber + '):\n\n' +
             'http:\/\/' + Host + '\/api\/group\/verify\/' 
-            + Student.RollNumber + '\/'+ Program + '\/' 
-            + Year + '\/' + groupToken.Token + '\/' + StudentNumber + '\n'
+            + Student.RollNumber + '\/' + groupToken.Token + '\/' + StudentNumber + '\/' + GroupID + '\n'
     };
     transporter.sendMail(mailOptions, (error) => {
         if (error) throw 'Unable to send email. Please try again.';
@@ -37,105 +48,90 @@ async function sendEmail(Student, Program, Year, Host, StudentNumber, OtherStude
 async function registerGroup(params, req) {
     if (
         await Student.findOne({ 
-            Name: params.StudentOne.Name, 
-            RollNumber: params.StudentOne.RollNumber 
+            Department: params.Department,
+            Program: params.Program,
+            Session: params.Session,
+            Year: params.Year,
+            FullName: params.StudentOne.FullName, 
+            RollNumber: params.StudentOne.RollNumber,
+
         }) &&
-        await Student.findOne({ 
-            Name: params.StudentTwo.Name, 
+        await Student.findOne({
+            Department: params.Department,
+            Program: params.Program,
+            Session: params.Session,
+            Year: params.Year,
+            FullName: params.StudentTwo.FullName, 
             RollNumber: params.StudentTwo.RollNumber 
         })
     ) {
-        if (await Group.findOne({ Username: params.Username })) throw 'Username already exists.';
+        if (await PendingGroup.findOne({ Username: params.Username })) throw 'Username already exists.';
         else {
             if (
                 await Group.findOne({ 
-                    'StudentOne.RollNumber': params.StudentOne.RollNumber,
-                    'StudentTwo.RollNumber': params.StudentTwo.RollNumber
+                    'StudentOne.RollNumber': params.StudentOne.RollNumber
                 }) || 
+                await Group.findOne({
+                    'StudentTwo.RollNumber': params.StudentTwo.RollNumber
+                }) ||
                 await Group.findOne({ 
-                    'StudentOne.RollNumber': params.StudentTwo.RollNumber,
                     'StudentTwo.RollNumber': params.StudentOne.RollNumber
+                }) || 
+                await Group.findOne({
+                    'StudentOne.RollNumber': params.StudentTwo.RollNumber
                 })
-            ) throw 'Group already exists. :(';
+            ) throw 'One of the members has already verified their group. :(';
             else {
-                if (
-                    await Group.findOne({ 
-                        'StudentOne.RollNumber': params.StudentOne.RollNumber,
-                        'StudentOne.Verified': true,
-                        'StudentTwo.Verified': true
-                    }) ||
-                    await Group.findOne({ 
-                        'StudentTwo.RollNumber': params.StudentOne.RollNumber,
-                        'StudentOne.Verified': true,
-                        'StudentTwo.Verified': true
-                    }) ||
-                    await Group.findOne({ 
-                        'StudentOne.RollNumber': params.StudentTwo.RollNumber,
-                        'StudentOne.Verified': true,
-                        'StudentTwo.Verified': true
-                    }) ||
-                    await Group.findOne({ 
-                        'StudentTwo.RollNumber': params.StudentTwo.RollNumber,
-                        'StudentOne.Verified': true,
-                        'StudentTwo.Verified': true
-                    })
-                ) throw 'One of the members has already verified their group. :(';
-                else {
-                    try {
-                        sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
-                        sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
-                        const group = new Group(params);
-                        group.Password = bcrypt.hashSync(group.Password, 10);
-                        return await group.save();
-                    } catch (err) { throw err; }
-                }
+                try {
+                    const pendingGroup = new PendingGroup(params);
+                    sendEmail(params.StudentOne, req.headers.host, 'One', params.StudentTwo, pendingGroup._id);
+                    sendEmail(params.StudentTwo, req.headers.host, 'Two', params.StudentOne, pendingGroup._id);
+                    pendingGroup.Password = bcrypt.hashSync(pendingGroup.Password, 10);
+                    return await pendingGroup.save();
+                } catch (err) { throw err; }
             }
         }
-    } throw 'One of the students does not exist.'
+    } throw 'One of the students does not exist.';
 }
 
 async function verifyGroup(params) {
     if (await GroupToken.findOne({ RollNumber: params.RollNumber, Token: params.Token })) {
-        if (params.Student === 'One') {
-            await Group.updateOne(
-                { Year: params.Year, Program: params.Program, 'StudentOne.RollNumber': params.RollNumber }, 
-                { 'StudentOne.Verified': true }
-            );
-            return await GroupToken.deleteOne({ RollNumber: params.RollNumber }, err => {
-                throw err;
-            });
-        } else if (params.Student === 'Two'){
-            await Group.updateOne(
-                { Year: params.Year, Program: params.Program, 'StudentTwo.RollNumber': params.RollNumber }, 
-                { 'StudentTwo.Verified': true }
-            );
-            return await GroupToken.deleteOne({ RollNumber: params.RollNumber }, err => {
-                throw err;
-            });
+        if (params.Student == 'One') {
+            const pendingGroup = await PendingGroup.findOne({ _id: params.GroupID });
+            pendingGroup.StudentOne.Verified = true;
+            if (pendingGroup.StudentTwo.Verified === true) {
+                createGroup(pendingGroup);
+                await PendingGroup.deleteOne({ _id: params.GroupID });
+            } else await pendingGroup.save();
+            return await GroupToken.deleteOne({ RollNumber: params.RollNumber });
+        } else if (params.Student == 'Two') {
+            const pendingGroup = await PendingGroup.findOne({ _id: params.GroupID });
+            pendingGroup.StudentTwo.Verified = true;
+            if (pendingGroup.StudentOne.Verified === true) {
+                createGroup(pendingGroup);
+                await PendingGroup.deleteOne({ _id: params.GroupID });
+            } else await pendingGroup.save();
+            return await GroupToken.deleteOne({ RollNumber: params.RollNumber });
         }
     } throw 'Link is either invalid or has expired.';
 }
 
-async function resendTokenGroup(params, req) {
-    if (await Batch.findOne({ Year: params.Year, Program: params.Program })) {
-        if (await GroupToken.findOne({ RollNumber: params.StudentOne.RollNumber })) {
-            await GroupToken.deleteOne({ RollNumber: params.StudentOne.RollNumber }, err => {
-                throw err;
-            });
-        }
-        if (await GroupToken.findOne({ RollNumber: params.StudentTwo.RollNumber })) {
-            await GroupToken.deleteOne({ RollNumber: params.StudentTwo.RollNumber }, err => {
-                throw err;
-            });
-        }
-        sendEmail(params.StudentOne, params.Program, params.Year, req.headers.host, 'One', params.StudentTwo);
-        sendEmail(params.StudentTwo, params.Program, params.Year, req.headers.host, 'Two', params.StudentOne);
-        return {};
-    } else throw 'Batch does not exist.';
+async function createGroup(pendingGroup) {
+    const group = new Group();
+    group.Department = pendingGroup.Department;
+    group.Program = pendingGroup.Program;
+    group.Session = pendingGroup.Session;
+    group.Year = pendingGroup.Year;
+    group.Username = pendingGroup.Username;
+    group.Password = pendingGroup.Password;
+    group.StudentOne.RollNumber = pendingGroup.StudentOne.RollNumber;
+    group.StudentTwo.RollNumber = pendingGroup.StudentTwo.RollNumber;
+    group.Password = pendingGroup.Password;
+    await group.save();
 }
 
 module.exports = {
+    loginGroup,
     registerGroup,
-    verifyGroup,
-    resendTokenGroup
+    verifyGroup
 }

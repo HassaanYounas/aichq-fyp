@@ -5,11 +5,12 @@ const router = express.Router();
 router.post('/reg', registerGroup);
 router.get('/verify/:RollNumber/:Token/:Student/:GroupID', verifyGroup);
 router.post('/login', loginGroup);
+router.post('/get/all', getGroups);
 
 function loginGroup(req, res, next) {
     groupService.loginGroup(req.body).then((group) => {
         res.json(group);
-    }).catch(err => next(err)); 
+    }).catch(err => next(err));
 }
 
 function registerGroup(req, res, next) {
@@ -21,6 +22,12 @@ function registerGroup(req, res, next) {
 function verifyGroup(req, res, next) {
     groupService.verifyGroup(req.params).then(() => {
         res.json({ 'message': 'Verification successful.' });
+    }).catch(err => next(err)); 
+}
+
+function getGroups(req, res, next) {
+    groupService.getGroups().then((groups) => {
+        res.json(groups);
     }).catch(err => next(err)); 
 }
 

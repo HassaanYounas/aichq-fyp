@@ -130,8 +130,19 @@ async function createGroup(pendingGroup) {
     await group.save();
 }
 
+async function getGroups() {
+    let groupsWithoutPassword = [];
+    let groups = await Group.find();
+    for (let i = 0; i < groups.length; i++) {
+        const { Password, ...groupWithoutPassword } = groups[i].toObject();
+        groupsWithoutPassword.push(groupWithoutPassword);
+    }
+    return groupsWithoutPassword;
+}
+
 module.exports = {
     loginGroup,
     registerGroup,
-    verifyGroup
+    verifyGroup,
+    getGroups
 }

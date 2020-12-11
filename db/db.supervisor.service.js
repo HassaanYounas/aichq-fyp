@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../helpers/config.json');
-const { Supervisor } = require('../models/index');
+const { Supervisor, SupervisorProposal } = require('../models/index');
 const mongoose = require('./mongoose');
 const nodemailer = require('nodemailer');
 
@@ -49,12 +49,23 @@ async function addSupervisor(params) {
     }
 }
 
+async function submitSupervisorProposal(params) {
+    const proposal = new SupervisorProposal(params);
+    return await proposal.save();
+}
+
 async function getSupervisors() {
     return await Supervisor.find();
+}
+
+async function getSupervisor(params) {
+    return await Supervisor.findOne({ _id: params._id });
 }
 
 module.exports = {
     loginSupervisor,
     addSupervisor,
-    getSupervisors
+    submitSupervisorProposal,
+    getSupervisors,
+    getSupervisor
 }

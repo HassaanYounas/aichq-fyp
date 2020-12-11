@@ -18,13 +18,7 @@ const GroupSchema = new mongoose.Schema({
         RollNumber: String,
         Contact: String,
         CGPA: String
-    },
-    Proposals: [{
-        Domain: String,
-        Title: String,
-        Abstract: String,
-        SupervisorUsername: String
-    }]
+    }
 });
 
 GroupSchema.set('toJSON', { virtuals: true });

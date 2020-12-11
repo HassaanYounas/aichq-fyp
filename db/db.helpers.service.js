@@ -6,20 +6,24 @@ const {
     PendingGroup,
     Supervisor, 
     GroupToken,
-    Student
+    Student,
+    SupervisorProposal,
+    GroupProposal
 } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function getEverything() {
     return Promise.all([
-        Admin.find(),
-        Department.find(), 
-        Batch.find(),
+        // Admin.find(),
+        // Department.find(), 
+        // Batch.find(),
         Group.find(),
-        PendingGroup.find(),
-        Supervisor.find(),
-        GroupToken.find(),
-        Student.find()
+        // PendingGroup.find(),
+        // Supervisor.find(),
+        // GroupToken.find(),
+        Student.find(),
+        // SupervisorProposal.find(),
+        // GroupProposal.find(),
     ]);
 }
 

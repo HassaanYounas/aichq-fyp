@@ -5,7 +5,9 @@ const router = express.Router();
 router.post('/login', loginSupervisor);
 router.post('/add', addSupervisor);
 router.post('/add/bulk', addSupervisorsBulk);
+router.post('/proposal', submitSupervisorProposal);
 router.post('/get/all', getSupervisors);
+router.post('/get', getSupervisor);
 
 function loginSupervisor(req, res, next) {
     supervisorService.loginSupervisor(req.body).then((supervisor) => {
@@ -34,9 +36,21 @@ function addSupervisorsBulk(req, res, next) {
     }
 }
 
+function submitSupervisorProposal(req, res, next) {
+    supervisorService.submitSupervisorProposal(req.body).then(() => {
+        res.json({});
+    }).catch(err => next(err)); 
+}
+
 function getSupervisors(req, res, next) {
     supervisorService.getSupervisors().then((supervisors) => {
         res.json(supervisors);
+    }).catch(err => next(err)); 
+}
+
+function getSupervisor(req, res, next) {
+    supervisorService.getSupervisor(req.body).then((supervisor) => {
+        res.json(supervisor);
     }).catch(err => next(err)); 
 }
 

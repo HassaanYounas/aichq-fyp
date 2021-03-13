@@ -3,10 +3,17 @@ const departmentService = require('../db/db.department.service');
 const router = express.Router();
 
 router.post('/add', addDepartment);
+router.post('/add/program', addProgram);
 router.post('/get/all', getDepartments);
 
 function addDepartment(req, res, next) {
     departmentService.addDepartment(req.body).then(() => {
+        res.json({});
+    }).catch(err => next(err)); 
+}
+
+function addProgram(req, res, next) {
+    departmentService.addProgram(req.body).then(() => {
         res.json({});
     }).catch(err => next(err)); 
 }

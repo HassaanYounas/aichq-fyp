@@ -20,7 +20,7 @@ function sendEmail(supervisor) {
     });
     let mailOptions = {
         from: 'aichq.fyp@zohomail.com',
-        to: supervisor.Email,
+        to: '170273@students.au.edu.pk',
         subject: 'AichQ | FYP Supervisor | Account Information',
         text: `Respected ${supervisor.FullName},\n\nYou have been registered as an FYP Supervisor for ${supervisor.Department} department.\n\nYour login credentials for AichQ are:\nEmail: ${supervisor.Email}\nPassword: ${supervisor.Password}\n\nYou can access AichQ from here: aichq-fyp.herokuapp.com\n\nRegards, AichQ Team.`
     };
@@ -33,6 +33,7 @@ async function loginSupervisor(params) {
     const supervisor = await Supervisor.findOne({ Email: params.Email });
     if (supervisor && bcrypt.compareSync(params.Password, supervisor.Password)) {
         const { Password, ...supervisorWithoutPassword } = supervisor.toObject();
+        if (!supervisorWithoutPassword.Active) throw 'Your account is currently inactive.';
         const token = jwt.sign({ sub: supervisor.id }, config.secret);
         return { ...supervisorWithoutPassword, token };
     } throw 'Invalid email or password.';
@@ -47,6 +48,18 @@ async function addSupervisor(params) {
         supervisor.Password = bcrypt.hashSync(supervisor.Password, 10);
         return await supervisor.save();
     }
+}
+
+async function setSupervisorInactive(params) {
+    if (await Supervisor.findOne({ Email: params.Email })) {
+        await Supervisor.updateOne({ Email: params.Email }, { Active: false });
+    } else throw 'Supervisor does not exist.';
+}
+
+async function setSupervisorActive(params) {
+    if (await Supervisor.findOne({ Email: params.Email })) {
+        await Supervisor.updateOne({ Email: params.Email }, { Active: true });
+    } else throw 'Supervisor does not exist.';
 }
 
 async function submitSupervisorProposal(params) {
@@ -65,6 +78,8 @@ async function getSupervisor(params) {
 module.exports = {
     loginSupervisor,
     addSupervisor,
+    setSupervisorActive,
+    setSupervisorInactive,
     submitSupervisorProposal,
     getSupervisors,
     getSupervisor

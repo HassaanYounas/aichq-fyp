@@ -5,6 +5,8 @@ const router = express.Router();
 router.post('/login', loginSupervisor);
 router.post('/add', addSupervisor);
 router.post('/add/bulk', addSupervisorsBulk);
+router.post('/set/active', setSupervisorActive );
+router.post('/set/inactive', setSupervisorInactive);
 router.post('/proposal', submitSupervisorProposal);
 router.post('/get/all', getSupervisors);
 router.post('/get', getSupervisor);
@@ -34,6 +36,18 @@ function addSupervisorsBulk(req, res, next) {
             if ((i === req.body.length - 1) && fewFailed) next('Few insertions failed.');
         });
     }
+}
+
+function setSupervisorActive(req, res, next) {
+    supervisorService.setSupervisorActive(req.body).then(() => {
+        res.json({});
+    }).catch(err => next(err)); 
+}
+
+function setSupervisorInactive(req, res, next) {
+    supervisorService.setSupervisorInactive(req.body).then(() => {
+        res.json({});
+    }).catch(err => next(err)); 
 }
 
 function submitSupervisorProposal(req, res, next) {

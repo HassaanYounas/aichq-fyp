@@ -23,6 +23,10 @@ async function addProgram(params) {
     } else throw 'Department does not exist.';
 }
 
+async function getPrograms(params) {
+    return await Department.findOne({ Name: params.Name });
+}
+
 async function getDepartments(params) {
     return await Department.find();
 }
@@ -30,5 +34,6 @@ async function getDepartments(params) {
 module.exports = {
     addDepartment,
     addProgram,
+    getPrograms,
     getDepartments
 }

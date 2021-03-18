@@ -7,7 +7,8 @@ router.post('/add', addSupervisor);
 router.post('/add/bulk', addSupervisorsBulk);
 router.post('/set/active', setSupervisorActive );
 router.post('/set/inactive', setSupervisorInactive);
-router.post('/proposal', submitSupervisorProposal);
+router.post('/proposal/submit', submitSupervisorProposal);
+router.post('/proposal/get/all', getSupervisorProposals);
 router.post('/get/all', getSupervisors);
 router.post('/get', getSupervisor);
 
@@ -53,6 +54,12 @@ function setSupervisorInactive(req, res, next) {
 function submitSupervisorProposal(req, res, next) {
     supervisorService.submitSupervisorProposal(req.body).then(() => {
         res.json({});
+    }).catch(err => next(err)); 
+}
+
+function getSupervisorProposals(req, res, next) {
+    supervisorService.getSupervisorProposals(req.body).then((proposals) => {
+        res.json(proposals);
     }).catch(err => next(err)); 
 }
 

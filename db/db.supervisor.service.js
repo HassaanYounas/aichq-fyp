@@ -67,6 +67,10 @@ async function submitSupervisorProposal(params) {
     return await proposal.save();
 }
 
+async function getSupervisorProposals(params) {
+    return await SupervisorProposal.find({ Email: params.Email });
+}
+
 async function getSupervisors() {
     return await Supervisor.find();
 }
@@ -81,6 +85,7 @@ module.exports = {
     setSupervisorActive,
     setSupervisorInactive,
     submitSupervisorProposal,
+    getSupervisorProposals,
     getSupervisors,
     getSupervisor
 }

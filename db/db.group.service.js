@@ -30,7 +30,7 @@ async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
     });
     let mailOptions = {
         from: 'aichq.fyp@zohomail.com',
-        to: Student.Email,
+        to: '170273@students.au.edu.pk',
         subject: 'AichQ | FYP Group Verfication | Request from ' + OtherStudent.FullName,
         text:
             'Hello, ' + Student.FullName + ' (' + Student.RollNumber + ').' + '\n\n' +
@@ -41,8 +41,7 @@ async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
     transporter.sendMail(mailOptions, (error) => {
         console.log('Mail sent');
         if (error) throw 'Unable to send email. Please try again.';
-    });
-    return await groupToken.save();
+    }); return await groupToken.save();
 }
 
 async function registerGroup(params, req) {

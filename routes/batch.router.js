@@ -3,7 +3,7 @@ const batchService = require('../db/db.batch.service');
 const router = express.Router();
 
 router.post('/add', addBatch);
-router.post('/get/all', getBatches);
+router.post('/get', getBatches);
 
 function addBatch(req, res, next) {
     batchService.addBatch(req.body).then(() => {
@@ -12,7 +12,7 @@ function addBatch(req, res, next) {
 }
 
 function getBatches(req, res, next) {
-    batchService.getBatches().then((batches) => {
+    batchService.getBatches(req.body).then((batches) => {
         res.json(batches);
     }).catch(err => next(err)); 
 }

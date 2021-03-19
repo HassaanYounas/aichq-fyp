@@ -8,35 +8,39 @@ const {
     GroupToken,
     Student,
     SupervisorProposal,
-    GroupProposal
+    GroupProposal,
+    Project
 } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function getEverything() {
     return Promise.all([
-        // Admin.find(),
-        // Department.find(), 
-        // Batch.find(),
+        Admin.find(),
+        Department.find(), 
+        Batch.find(),
         Group.find(),
-        // PendingGroup.find(),
-        // Supervisor.find(),
-        // GroupToken.find(),
+        PendingGroup.find(),
+        Supervisor.find(),
+        GroupToken.find(),
         Student.find(),
-        // SupervisorProposal.find(),
-        // GroupProposal.find(),
+        SupervisorProposal.find(),
+        GroupProposal.find(),
     ]);
 }
 
 async function clearDB() {
     return Promise.all([
         Admin.deleteMany(),
-        Department.deleteMany(),
         Batch.deleteMany(),
+        Department.deleteMany(),
+        GroupProposal.deleteMany(),
+        GroupToken.deleteMany(),
         Group.deleteMany(),
         PendingGroup.deleteMany(),
-        Supervisor.deleteMany(),
-        GroupToken.deleteMany(),
-        Student.deleteMany()
+        Project.deleteMany(),
+        Student.deleteMany(),
+        SupervisorProposal.deleteMany(),
+        Supervisor.deleteMany()
     ]);
 }
 

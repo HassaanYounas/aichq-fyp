@@ -27,8 +27,11 @@ async function addBatch(params) {
 //     } else throw 'Batch does not exist.';
 // }
 
-async function getBatches() {
-    return await Batch.find();
+async function getBatches(params) {
+    if ('Department' in params) 
+        return await Batch.find({ Department: params.Department });
+    else
+        return await Batch.find();
 }
 
 // async function getSlimBatches() {

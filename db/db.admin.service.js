@@ -27,8 +27,8 @@ async function updateAdmin(params) {
     }); return await Admin.findOne({});
 }
 
-async function getAdmin() {
-    const admin = await Admin.findOne();
+async function getAdmin(params) {
+    const admin = await Admin.findOne({ _id: params._id });
     const { Password, ...adminWithoutPassword } = admin.toObject();
     return adminWithoutPassword;
 }

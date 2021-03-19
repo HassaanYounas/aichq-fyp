@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const jwt = require('./helpers/jwt');
 const adminRouter = require('./routes/admin.router');
+const superAdminRouter = require('./routes/super.admin.router');
 const departmentRouter = require('./routes/department.router');
 const batchRouter = require('./routes/batch.router');
 const supervisorRouter = require('./routes/supervisor.router');
@@ -22,6 +23,7 @@ app.use(express.static(process.cwd() + '/client/'));
 //app.use(jwt());
 app.use('/api', helperRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/super/admin', superAdminRouter);
 app.use('/api/department', departmentRouter);
 app.use('/api/batch', batchRouter);
 app.use('/api/supervisor', supervisorRouter);

@@ -71,8 +71,8 @@ async function getSupervisorProposals(params) {
     return await SupervisorProposal.find({ Email: params.Email });
 }
 
-async function getSupervisors() {
-    return await Supervisor.find();
+async function getSupervisors(params) {
+    return await Supervisor.find({ Department: params.Department });
 }
 
 async function getSupervisor(params) {

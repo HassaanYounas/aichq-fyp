@@ -1,15 +1,15 @@
-const GroupProposalModel = require('./group-proposal.model');
-const SupervisorModel = require('./supervisor.model');
-
 module.exports = {
-    Group: require('./group.model'),
-    PendingGroup: require('./pending-group.model'),
-    Supervisor: require('./supervisor.model'),
-    Student: require('./student.model'),
-    Batch: require('./batch.model'),
     Admin: require('./admin.model'),
-    GroupToken: require('./group-token.model'),
+    Batch: require('./batch.model'),
     Department: require('./department.model'),
     GroupProposal: require('./group-proposal.model'),
-    SupervisorProposal: require('./supervisor-proposal.model')
+    GroupToken: require('./group-token.model'),
+    Group: require('./group.model'),
+    PendingGroup: require('./pending-group.model'),
+    Project: require('./project.model'),
+    Student: require('./student.model'),
+    SuperAdmin: require('./super.admin.model'),
+    GroupProposal: require('./group-proposal.model'),
+    SupervisorProposal: require('./supervisor-proposal.model'),
+    Supervisor: require('./supervisor.model')
 };

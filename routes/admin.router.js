@@ -26,7 +26,7 @@ function updateAdmin(req, res, next) {
 }
 
 function getAdmin(req, res, next) {
-    adminService.getAdmin().then((admin) => {
+    adminService.getAdmin(req.body).then((admin) => {
         res.json(admin);
     }).catch(err => next(err));
 }

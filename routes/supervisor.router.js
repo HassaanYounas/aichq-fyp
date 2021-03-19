@@ -64,7 +64,7 @@ function getSupervisorProposals(req, res, next) {
 }
 
 function getSupervisors(req, res, next) {
-    supervisorService.getSupervisors().then((supervisors) => {
+    supervisorService.getSupervisors(req.body).then((supervisors) => {
         res.json(supervisors);
     }).catch(err => next(err)); 
 }

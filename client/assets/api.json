@@ -1,5 +1,6 @@
 {
     "loginAdmin": "http://localhost:8080/api/admin/login",
+    "loginSuperAdmin": "http://localhost:8080/api/super/admin/login",
     "updateAdmin": "http://localhost:8080/api/admin/update",
     "getAdmin": "http://localhost:8080/api/admin/get",
     "addDepartment": "http://localhost:8080/api/department/add",
@@ -7,7 +8,7 @@
     "getPrograms": "http://localhost:8080/api/department/get/programs",
     "getDepartment": "http://localhost:8080/api/department/get/all",
     "addBatch": "http://localhost:8080/api/batch/add",
-    "getBatches": "http://localhost:8080/api/batch/get/all",
+    "getBatches": "http://localhost:8080/api/batch/get",
     "loginSupervisor": "http://localhost:8080/api/supervisor/login",
     "addSupervisor": "http://localhost:8080/api/supervisor/add",
     "addSupervisorsBulk": "http://localhost:8080/api/supervisor/add/bulk",
@@ -19,8 +20,11 @@
     "getStudents": "http://localhost:8080/api/student/get/all",
     "registerGroup": "http://localhost:8080/api/group/reg",
     "getGroups": "http://localhost:8080/api/group/get/all",
+    "getGroup": "http://localhost:8080/api/group/get",
     "loginGroup": "http://localhost:8080/api/group/login",
     "getSupervisor": "http://localhost:8080/api/supervisor/get",
     "submitSupervisorProposal": "http://localhost:8080/api/supervisor/proposal/submit",
-    "getSupervisorProposals": "http://localhost:8080/api/supervisor/proposal/get/all"
+    "getSupervisorProposals": "http://localhost:8080/api/supervisor/proposal/get/all",
+    "addSupervisionRequest": "http://localhost:8080/api/supervisor/request/submit",
+    "getSupervisionRequests": "http://localhost:8080/api/supervisor/request/get"
 }

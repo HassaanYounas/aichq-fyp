@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../helpers/config.json');
-const { Supervisor, SupervisorProposal } = require('../models/index');
+const { Supervisor, SupervisorProposal, SupervisorRequest } = require('../models/index');
 const mongoose = require('./mongoose');
 const nodemailer = require('nodemailer');
 
@@ -68,7 +68,27 @@ async function submitSupervisorProposal(params) {
 }
 
 async function getSupervisorProposals(params) {
-    return await SupervisorProposal.find({ Email: params.Email });
+    if ('Email' in params) 
+        return await SupervisorProposal.find({ Email: params.Email });
+    else
+        return await SupervisorProposal.find({
+            Program: params.Program,
+            Session: params.Session,
+            Year: params.Year
+        });
+}
+
+async function addSupervisionRequest(params) {
+    if (await SupervisorRequest.findOne({ 
+        SupervisorEmail: params.SupervisorEmail,
+        GroupID: params.GroupID
+    })) throw 'You can cannot send multiple requests to the same supervisor. The supervisor needs to reject your previous request to be able to receive a new request.';
+    const request = new SupervisorRequest(params);
+    return await request.save();
+}
+
+async function getSupervisionRequests(params) {
+    return await SupervisorRequest.find({ SupervisorEmail: params.Email });
 }
 
 async function getSupervisors(params) {
@@ -86,6 +106,8 @@ module.exports = {
     setSupervisorInactive,
     submitSupervisorProposal,
     getSupervisorProposals,
+    addSupervisionRequest,
+    getSupervisionRequests,
     getSupervisors,
     getSupervisor
 }

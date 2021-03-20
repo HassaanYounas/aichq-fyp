@@ -139,9 +139,14 @@ async function getGroups() {
     return groupsWithoutPassword;
 }
 
+async function getGroup(params) {
+    return await Group.findOne({ _id: params._id });
+}
+
 module.exports = {
     loginGroup,
     registerGroup,
     verifyGroup,
-    getGroups
+    getGroups,
+    getGroup
 }

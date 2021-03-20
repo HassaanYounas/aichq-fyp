@@ -11,5 +11,6 @@ module.exports = {
     SuperAdmin: require('./super.admin.model'),
     GroupProposal: require('./group-proposal.model'),
     SupervisorProposal: require('./supervisor-proposal.model'),
+    SupervisorRequest: require('./supervisor-request.model'),
     Supervisor: require('./supervisor.model')
 };

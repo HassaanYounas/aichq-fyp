@@ -9,6 +9,7 @@ const GroupSchema = new mongoose.Schema({
     Username: String,
     Password: String,
     ProjectID: Number,
+    SupervisorEmail: String,
     StudentOne: {
         RollNumber: String,
         Contact: String,

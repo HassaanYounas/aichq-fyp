@@ -8,7 +8,11 @@ const BatchSchema = new mongoose.Schema({
     Session: String,
 	Year: String,
     Department: String,
-	Program: String
+	Program: String,
+    MaxGroups: {
+        type: Number,
+        default: 0
+    }
 });
 
 BatchSchema.set('toJSON', { virtuals: true });

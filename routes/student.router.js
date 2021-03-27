@@ -1,5 +1,6 @@
 const express = require('express');
 const studentService = require('../db/db.student.service');
+const batchService = require('../db/db.batch.service');
 const router = express.Router();
 
 router.post('/add', addStudent);

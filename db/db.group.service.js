@@ -30,7 +30,7 @@ async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
     });
     let mailOptions = {
         from: 'aichq.fyp@zohomail.com',
-        to: '170273@students.au.edu.pk',
+        to: Student.RollNumber + '@students.au.edu.pk',
         subject: 'AichQ | FYP Group Verfication | Request from ' + OtherStudent.FullName,
         text:
             'Hello, ' + Student.FullName + ' (' + Student.RollNumber + ').' + '\n\n' +
@@ -38,10 +38,15 @@ async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
             'http:\/\/' + Host + '\/api\/group\/verify\/' 
             + Student.RollNumber + '\/' + groupToken.Token + '\/' + StudentNumber + '\/' + GroupID + '\n'
     };
-    transporter.sendMail(mailOptions, (error) => {
-        console.log('Mail sent');
-        if (error) throw 'Unable to send email. Please try again.';
-    }); return await groupToken.save();
+    groupToken.save();
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                reject(error);
+                return;
+            } resolve(info);
+        });
+    });
 }
 
 async function registerGroup(params, req) {
@@ -83,8 +88,22 @@ async function registerGroup(params, req) {
             else {
                 try {
                     const pendingGroup = new PendingGroup(params);
-                    sendEmail(params.StudentOne, req.headers.host, 'One', params.StudentTwo, pendingGroup._id);
-                    sendEmail(params.StudentTwo, req.headers.host, 'Two', params.StudentOne, pendingGroup._id);
+                    for (let i = 0; i < 3; i++) {
+                        try {
+                            info = await sendEmail(params.StudentOne, req.headers.host, 'One', params.StudentTwo, pendingGroup._id);
+                            break;
+                        } catch (e) {
+                            error = e;
+                        }
+                    }
+                    for (let i = 0; i < 3; i++) {
+                        try {
+                            info = await sendEmail(params.StudentTwo, req.headers.host, 'Two', params.StudentOne, pendingGroup._id);
+                            break;
+                        } catch (e) {
+                            error = e;
+                        }
+                    }
                     pendingGroup.Password = bcrypt.hashSync(pendingGroup.Password, 10);
                     return await pendingGroup.save();
                 } catch (err) { throw err; }

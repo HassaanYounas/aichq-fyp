@@ -18,14 +18,14 @@ async function getEverything() {
     return Promise.all([
         // Admin.find(),
         // Department.find(), 
-        // Batch.find(),
-        Group.find(),
+        Batch.find(),
+        // Group.find(),
         // PendingGroup.find(),
         // Supervisor.find(),
         // GroupToken.find(),
         // Student.find(),
         // SupervisorProposal.find(),
-        SupervisorRequest.find()
+        // SupervisorRequest.find()
         // GroupProposal.find(),
     ]);
 }
@@ -42,8 +42,8 @@ async function clearDB() {
         // Project.deleteMany(),
         // Student.deleteMany(),
         // SupervisorProposal.deleteMany(),
-        SupervisorRequest.deleteMany(),
-        // Supervisor.deleteMany()
+        // SupervisorRequest.deleteMany(),
+        Supervisor.deleteMany()
     ]);
 }
 

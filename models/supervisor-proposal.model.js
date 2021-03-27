@@ -8,7 +8,8 @@ const SupervisorProposalSchema = new mongoose.Schema({
 	Domain: String,
     Title: String,
 	Abstract: String,
-	Email: String
+	Email: String,
+    Approved: { type: Number, default: -1 }
 });
 
 SupervisorProposalSchema.set('toJSON', { virtuals: true });

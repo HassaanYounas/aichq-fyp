@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
 
 const SupervisorRequestSchema = new mongoose.Schema({
+    Department: String,
     ProposalTitle: String,
     SupervisorEmail: String,
+    SupervisorName: String,
     GroupID: String,
     Session: String,
     Year: String,
     Program: String,
     StudentOneRollNumber: String,
     StudentTwoRollNumber: String,
-    Accepted: { type: Boolean, default: false },
-    Rejected: { type: Boolean, default: false },
+    Accepted: { type: Number, default: -1 },
     Timestamp: { type: Date, default: Date.now }
 });
 

@@ -16,16 +16,22 @@ function generatePassword(length) {
 
 function sendEmail(supervisor) {
     const transporter = nodemailer.createTransport({
-        service: 'zoho', auth: { user: 'aichq.fyp@zohomail.com', pass: 'HTAichQ@123' }
+        host: 'smtp.mailtrap.io', port: 2525,
+        auth: { user: 'a36d2a20fc0a61', pass: '6c9e693d3d4cc6' }
     });
     let mailOptions = {
-        from: 'aichq.fyp@zohomail.com',
-        to: '170273@students.au.edu.pk',
+        from: 'no.reply@aichq.com',
+        to: supervisor.Email,
         subject: 'AichQ | FYP Supervisor | Account Information',
         text: `Respected ${supervisor.FullName},\n\nYou have been registered as an FYP Supervisor for ${supervisor.Department} department.\n\nYour login credentials for AichQ are:\nEmail: ${supervisor.Email}\nPassword: ${supervisor.Password}\n\nYou can access AichQ from here: aichq-fyp.herokuapp.com\n\nRegards, AichQ Team.`
     };
-    transporter.sendMail(mailOptions, (error) => {
-        if (error) throw 'Unable to send email. Please try again.';
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                reject(error);
+                return;
+            } resolve(info);
+        });
     });
 }
 
@@ -43,8 +49,16 @@ async function addSupervisor(params) {
     if (await Supervisor.findOne({ Email: params.Email })) throw 'Email already exists.';
     else {
         const supervisor = new Supervisor(params);
-        supervisor.Password = generatePassword(8);
-        sendEmail(supervisor);
+        // supervisor.Password = generatePassword(8);
+        supervisor.Password = '123456789';
+        for (let i = 0; i < 3; i++) {
+            try {
+                info = await sendEmail(supervisor);
+                break;
+            } catch (e) {
+                error = e;
+            }
+        }
         supervisor.Password = bcrypt.hashSync(supervisor.Password, 10);
         return await supervisor.save();
     }
@@ -68,14 +82,24 @@ async function submitSupervisorProposal(params) {
 }
 
 async function getSupervisorProposals(params) {
-    if ('Email' in params) 
+    if ('Department' in params) 
+        return await SupervisorProposal.find({ Department: params.Department });
+    else if ('Email' in params) 
         return await SupervisorProposal.find({ Email: params.Email });
     else
         return await SupervisorProposal.find({
             Program: params.Program,
             Session: params.Session,
-            Year: params.Year
+            Year: params.Year,
+            Approved: params.Approved,
         });
+}
+
+async function updateSupervisorProposal(params) {
+    return await SupervisorProposal.updateOne(
+        { _id: params._id }, 
+        { Approved: params.Approved }
+    );
 }
 
 async function addSupervisionRequest(params) {
@@ -88,7 +112,17 @@ async function addSupervisionRequest(params) {
 }
 
 async function getSupervisionRequests(params) {
-    return await SupervisorRequest.find({ SupervisorEmail: params.Email });
+    if ('Email' in params)
+        return await SupervisorRequest.find({ SupervisorEmail: params.Email });
+    else 
+        return await SupervisorRequest.find({ Department: params.Department });
+}
+
+async function updateSupervisionRequest(params) {
+    return await SupervisorRequest.updateOne(
+        { _id: params._id },
+        { Accepted: params.Accepted }
+    );
 }
 
 async function getSupervisors(params) {
@@ -106,8 +140,10 @@ module.exports = {
     setSupervisorInactive,
     submitSupervisorProposal,
     getSupervisorProposals,
+    updateSupervisorProposal,
     addSupervisionRequest,
     getSupervisionRequests,
+    updateSupervisionRequest,
     getSupervisors,
     getSupervisor
 }

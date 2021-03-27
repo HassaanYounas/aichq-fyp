@@ -33,7 +33,7 @@ function getGroups(req, res, next) {
 }
 
 function getGroup(req, res, next) {
-    groupService.getGroups(req.body).then((group) => {
+    groupService.getGroup(req.body).then((group) => {
         res.json(group);
     }).catch(err => next(err)); 
 }

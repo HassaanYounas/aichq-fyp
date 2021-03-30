@@ -32,17 +32,17 @@ async function getEverything() {
 
 async function clearDB() {
     return Promise.all([
-        // Admin.deleteMany(),
-        // Batch.deleteMany(),
-        // Department.deleteMany(),
-        // GroupProposal.deleteMany(),
-        // GroupToken.deleteMany(),
-        // Group.deleteMany(),
-        // PendingGroup.deleteMany(),
-        // Project.deleteMany(),
-        // Student.deleteMany(),
-        // SupervisorProposal.deleteMany(),
-        // SupervisorRequest.deleteMany(),
+        Admin.deleteMany(),
+        Batch.deleteMany(),
+        Department.deleteMany(),
+        GroupProposal.deleteMany(),
+        GroupToken.deleteMany(),
+        Group.deleteMany(),
+        PendingGroup.deleteMany(),
+        Project.deleteMany(),
+        Student.deleteMany(),
+        SupervisorProposal.deleteMany(),
+        SupervisorRequest.deleteMany(),
         Supervisor.deleteMany()
     ]);
 }

@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/add', addStudent);
 router.post('/add/bulk', addStudentsBulk);
 router.post('/get/all', getStudents);
+router.post('/get/batch', getStudentsOfBatch);
 
 function addStudent(req, res, next) {
     studentService.addStudent(req.body).then(() => {
@@ -30,6 +31,12 @@ function addStudentsBulk(req, res, next) {
 
 function getStudents(req, res, next) {
     studentService.getStudents().then((students) => {
+        res.json(students);
+    }).catch(err => next(err)); 
+}
+
+function getStudentsOfBatch(req, res, next) {
+    studentService.getStudentsOfBatch(req.body).then((students) => {
         res.json(students);
     }).catch(err => next(err)); 
 }

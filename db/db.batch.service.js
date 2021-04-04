@@ -26,11 +26,19 @@ async function getStudentsCount(params) {
 
 async function getSupervisorsCount(params) {
     return await Supervisor.count({
-        Department: params.Department
+        Department: params.Department,
+        Active: true
     }, (errSupervisor, supervisorDocs) => {
         if (errSupervisor) throw errSupervisor;
         return supervisorDocs;
     })
+}
+
+async function getNumberOfBatches(params) {
+    return await Batch.count({
+        Department: params.Department,
+        Program: params.Program
+    });
 }
 
 async function updateMaxGroups(params, maxGroups) {
@@ -59,5 +67,6 @@ async function getBatches(params) {
 module.exports = {
     addBatch,
     setMaxGroups,
-    getBatches
+    getBatches,
+    getNumberOfBatches
 }

@@ -7,6 +7,10 @@ const StudentSchema = new mongoose.Schema({
     Year: String,
     FullName: String,
     RollNumber: String,
+    Group: {
+        type: Boolean,
+        default: false
+    },
     Phase: {
         type: Number,
         default: 1

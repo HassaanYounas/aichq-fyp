@@ -8,8 +8,10 @@ const GroupSchema = new mongoose.Schema({
     TeamName: String,
     Username: String,
     Password: String,
+    ProjectTitle: String,
     ProjectID: Number,
     SupervisorEmail: String,
+    SupervisorName: String,
     StudentOne: {
         RollNumber: String,
         Contact: String,

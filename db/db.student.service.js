@@ -11,7 +11,12 @@ async function getStudents() {
     return await Student.find();
 }
 
+async function getStudentsOfBatch(params) {
+    return await Student.find(params);
+}
+
 module.exports = {
     addStudent,
-    getStudents
+    getStudents,
+    getStudentsOfBatch
 }

@@ -51,7 +51,7 @@ async function addSupervisor(params) {
         const supervisor = new Supervisor(params);
         // supervisor.Password = generatePassword(8);
         supervisor.Password = '123456789';
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             try {
                 info = await sendEmail(supervisor);
                 break;
@@ -115,7 +115,7 @@ async function getSupervisionRequests(params) {
     if ('Email' in params)
         return await SupervisorRequest.find({ SupervisorEmail: params.Email });
     else 
-        return await SupervisorRequest.find({ Department: params.Department });
+        return await SupervisorRequest.find({ GroupID: params.GroupID });
 }
 
 async function updateSupervisionRequest(params) {

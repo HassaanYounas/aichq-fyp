@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../helpers/config.json');
-const { Student, Group, PendingGroup, GroupToken } = require('../models/index');
+const { Student, Group, PendingGroup, GroupToken, SupervisorRequest } = require('../models/index');
 const mongoose = require('./mongoose');
 const nodemailer = require('nodemailer');
 
@@ -26,10 +26,11 @@ async function loginGroup(params) {
 async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
     const groupToken = new GroupToken({ RollNumber: Student.RollNumber, Token: generateToken(64)});
     const transporter = nodemailer.createTransport({
-        service: 'zoho', auth: { user: 'aichq.fyp@zohomail.com', pass: 'HTAichQ@123' }
+        host: 'smtp.mailtrap.io', port: 2525,
+        auth: { user: 'a36d2a20fc0a61', pass: '6c9e693d3d4cc6' }
     });
     let mailOptions = {
-        from: 'aichq.fyp@zohomail.com',
+        from: 'no.reply@aichq.com',
         to: Student.RollNumber + '@students.au.edu.pk',
         subject: 'AichQ | FYP Group Verfication | Request from ' + OtherStudent.FullName,
         text:
@@ -88,7 +89,7 @@ async function registerGroup(params, req) {
             else {
                 try {
                     const pendingGroup = new PendingGroup(params);
-                    for (let i = 0; i < 3; i++) {
+                    for (let i = 0; i < 2; i++) {
                         try {
                             info = await sendEmail(params.StudentOne, req.headers.host, 'One', params.StudentTwo, pendingGroup._id);
                             break;
@@ -96,7 +97,7 @@ async function registerGroup(params, req) {
                             error = e;
                         }
                     }
-                    for (let i = 0; i < 3; i++) {
+                    for (let i = 0; i < 2; i++) {
                         try {
                             info = await sendEmail(params.StudentTwo, req.headers.host, 'Two', params.StudentOne, pendingGroup._id);
                             break;
@@ -119,6 +120,16 @@ async function verifyGroup(params) {
             pendingGroup.StudentOne.Verified = true;
             if (pendingGroup.StudentTwo.Verified === true) {
                 createGroup(pendingGroup);
+                await Student.updateOne({
+                    RollNumber: pendingGroup.StudentOne.RollNumber
+                }, {
+                    Group: true
+                });
+                await Student.updateOne({
+                    RollNumber: pendingGroup.StudentTwo.RollNumber
+                }, {
+                    Group: true
+                });
                 await PendingGroup.deleteOne({ _id: params.GroupID });
             } else await pendingGroup.save();
             return await GroupToken.deleteOne({ RollNumber: params.RollNumber });
@@ -158,6 +169,19 @@ async function getGroups() {
     return groupsWithoutPassword;
 }
 
+async function assignSupervisor(params) {
+    console.log(params)
+    await Group.updateOne({
+        _id: params._id
+    }, {
+        SupervisorEmail: params.SupervisorEmail,
+        ProjectTitle: params.ProposalTitle
+    });
+    return await SupervisorRequest.deleteMany({
+        GroupID: params._id
+    });
+}
+
 async function getGroup(params) {
     return await Group.findOne({ _id: params._id });
 }
@@ -167,5 +191,6 @@ module.exports = {
     registerGroup,
     verifyGroup,
     getGroups,
-    getGroup
+    getGroup,
+    assignSupervisor
 }

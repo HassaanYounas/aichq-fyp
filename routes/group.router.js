@@ -6,6 +6,7 @@ router.post('/reg', registerGroup);
 router.get('/verify/:RollNumber/:Token/:Student/:GroupID', verifyGroup);
 router.post('/login', loginGroup);
 router.post('/get/all', getGroups);
+router.post('/assign/supervisor', assignSupervisor);
 router.post('/get', getGroup);
 
 function loginGroup(req, res, next) {
@@ -29,6 +30,12 @@ function verifyGroup(req, res, next) {
 function getGroups(req, res, next) {
     groupService.getGroups().then((groups) => {
         res.json(groups);
+    }).catch(err => next(err)); 
+}
+
+function assignSupervisor(req, res, next) {
+    groupService.assignSupervisor(req.body).then(() => {
+        res.json({});
     }).catch(err => next(err)); 
 }
 

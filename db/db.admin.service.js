@@ -5,7 +5,7 @@ const { Department } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function loginAdmin(params) {
-    const department = await Department.find({ Email: params.Email });
+    const department = await Department.findOne({ Email: params.Email });
     if (department && bcrypt.compareSync(params.Password, department.Password)) {
         let admin = {
             Department: department.Name,

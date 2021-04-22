@@ -15,7 +15,7 @@ function generateToken(length) {
 }
 
 async function loginGroup(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let group;
         department.Programs.forEach(p => {
@@ -75,7 +75,7 @@ async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID, De
 }
 
 async function registerGroup(params, req) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         if (await PendingGroup.findOne({ Username: params.Username })) throw 'Username already exists.';
         try {
@@ -99,11 +99,11 @@ async function registerGroup(params, req) {
 }
 
 async function verifyGroup(params) {
-    const department = await Department.find({ _id: params.DepartmentID });
+    const department = await Department.findOne({ _id: params.DepartmentID });
     if (department) {
-        if (await GroupToken.find({ RollNumber: params.RollNumber, Token: params.Token })) {
+        if (await GroupToken.findOne({ RollNumber: params.RollNumber, Token: params.Token })) {
             if (params.Student == 'One') {
-                const pendingGroup = await PendingGroup.find({ _id: params.GroupID });
+                const pendingGroup = await PendingGroup.findOne({ _id: params.GroupID });
                 if (pendingGroup) {
                     pendingGroup.StudentOne.Verified = true;
                     if (pendingGroup.StudentTwo.Verified === true) {
@@ -174,7 +174,7 @@ async function verifyGroup(params) {
 }
 
 async function getGroups(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let groups = [];
         department.Programs.forEach(p => {
@@ -202,7 +202,7 @@ async function getGroups(params) {
 }
 
 async function getGroup(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let group;
         department.Programs.forEach(p => {

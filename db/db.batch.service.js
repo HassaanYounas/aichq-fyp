@@ -2,7 +2,7 @@ const { Department } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function addBatch(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Programs.forEach(e => {
             if (e.Title == params.Program) {
@@ -19,7 +19,7 @@ async function addBatch(params) {
 }
 
 async function getStudentsCount(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let count = 0;
         department.Programs.forEach(p => {
@@ -34,7 +34,7 @@ async function getStudentsCount(params) {
 }
 
 async function getSupervisorsCount(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let count = 0;
         department.Supervisors.forEach(s => {
@@ -45,7 +45,7 @@ async function getSupervisorsCount(params) {
 }
 
 async function updateMaxGroups(params, maxGroups) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Programs.forEach(e => {
             if (e.Title == params.Program) {
@@ -71,7 +71,7 @@ async function setMaxGroups(params) {
 
 async function getBatches(params) {
     if ('Department' in params) {
-        const department = await Department.find({ Name: params.Department });
+        const department = await Department.findOne({ Name: params.Department });
         if (department) {
             let batches = [];
             department.Programs.forEach(e => {
@@ -88,7 +88,7 @@ async function getBatches(params) {
             }); return batches;
         } throw 'Department not found.';
     } else {
-        const departments = await Department.find();
+        const departments = await Department.findOne();
         if (departments) {
             let batches = [];
             departments.forEach(d => {

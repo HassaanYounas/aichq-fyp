@@ -37,7 +37,7 @@ function sendEmail(supervisor, department) {
 }
 
 async function loginSupervisor(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let supervisor;
         department.Supervisors.forEach(s => {
@@ -57,7 +57,7 @@ async function loginSupervisor(params) {
 }
 
 async function addSupervisor(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Supervisors.forEach(s => {
             if (s.Email === params.Email) throw 'Email already exists.';
@@ -80,7 +80,7 @@ async function addSupervisor(params) {
 }
 
 async function setSupervisorInactive(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Supervisors.forEach(s => {
             if (s.Email == params.Email) s.Active = false;
@@ -90,7 +90,7 @@ async function setSupervisorInactive(params) {
 }
 
 async function setSupervisorActive(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Supervisors.forEach(s => {
             if (s.Email == params.Email) s.Active = true;
@@ -100,7 +100,7 @@ async function setSupervisorActive(params) {
 }
 
 async function submitSupervisorProposal(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Supervisors.forEach(s => {
             if (s.Email == params.Email) {
@@ -118,7 +118,7 @@ async function submitSupervisorProposal(params) {
 
 async function getSupervisorProposals(params) {
     if ('Email' in params) {
-        const department = await Department.find({ Name: params.Department });
+        const department = await Department.findOne({ Name: params.Department });
         if (department) {
             let proposals = [];
             department.Supervisors.forEach(s => {
@@ -126,7 +126,7 @@ async function getSupervisorProposals(params) {
             }); return proposals;
         } else throw 'Department not found.';
     } else if ('Program' in params) {
-        const department = await Department.find({ Name: params.Department });
+        const department = await Department.findOne({ Name: params.Department });
         if (department) {
             let proposals = [];
             department.Supervisors.forEach(s => {
@@ -147,7 +147,7 @@ async function getSupervisorProposals(params) {
             }); return proposals
         } else throw 'Department not found.';
     } else {
-        const department = await Department.find({ Name: params.Department });
+        const department = await Department.findOne({ Name: params.Department });
         if (department) {
             let proposals = [];
             department.Supervisors.forEach(s => {
@@ -168,7 +168,7 @@ async function getSupervisorProposals(params) {
 }
 
 async function updateSupervisorProposal(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Supervisors.forEach(s => {
             if (s.Email == params.Email) {
@@ -181,7 +181,7 @@ async function updateSupervisorProposal(params) {
 }
 
 async function addSupervisionRequest(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let exists = false;
         department.Programs.forEach(p => {
@@ -212,7 +212,7 @@ async function addSupervisionRequest(params) {
 
 async function getSupervisionRequests(params) {
     if ('Email' in params) {
-        const department = await Department.find({ Name: params.Department });
+        const department = await Department.findOne({ Name: params.Department });
         if (department) {
             let requests = [];
             department.Programs.forEach(p => {
@@ -241,7 +241,7 @@ async function getSupervisionRequests(params) {
             }); return requests;
         }
     } else {
-        const department = await Department.find({ Name: params.Department });
+        const department = await Department.findOne({ Name: params.Department });
         if (department) {
             let requests = [];
             department.Programs.forEach(p => {
@@ -277,7 +277,7 @@ async function getSupervisionRequests(params) {
 }
 
 async function updateSupervisionRequest(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Programs.forEach(p => {
             if (p.Title == params.Program) {
@@ -298,7 +298,7 @@ async function updateSupervisionRequest(params) {
 }
 
 async function getSupervisors(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let supervisors = [];
         department.Supervisors.forEach(s => {

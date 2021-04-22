@@ -32,7 +32,7 @@ function sendEmail(department) {
 }
 
 async function addDepartment(params) {
-    if (await Department.find({ 
+    if (await Department.findOne({ 
         $or: [
             { 'Email': params.Email },
             { 'Name': params.Name }
@@ -54,7 +54,7 @@ async function addDepartment(params) {
 }
 
 async function updateDepartment(params) {
-    const department = await Department.find({ Email: params.OldEmail });
+    const department = await Department.findOne({ Email: params.OldEmail });
     if (department) {
         department.Name = params.Name;
         department.DirectorName = params.DirectorName;
@@ -70,7 +70,7 @@ async function updateDepartment(params) {
 }
 
 async function addProgram(params) {
-    const department = await Department.find({ Name: params.Name });
+    const department = await Department.findOne({ Name: params.Name });
     if (department) {
         department.Programs.forEach(e => {
             if (e.Title == params.Title) throw 'Program already exists in department.';
@@ -83,7 +83,7 @@ async function addProgram(params) {
 }
 
 async function getPrograms(params) {
-    const department = await Department.find({ Name: params.Name });
+    const department = await Department.findOne({ Name: params.Name });
     if (department) {
         let programs = [];
         department.Programs.forEach(e => {

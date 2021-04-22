@@ -2,7 +2,7 @@ const { Department } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function addStudent(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         department.Programs.forEach(e => {
             if (e.Title == params.Program) {
@@ -24,7 +24,7 @@ async function addStudent(params) {
 }
 
 async function getStudents(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let students = [];
         department.Programs.forEach(e => {
@@ -46,7 +46,7 @@ async function getStudents(params) {
 }
 
 async function getStudentsOfBatch(params) {
-    const department = await Department.find({ Name: params.Department });
+    const department = await Department.findOne({ Name: params.Department });
     if (department) {
         let students = [];
         department.Programs.forEach(e => {

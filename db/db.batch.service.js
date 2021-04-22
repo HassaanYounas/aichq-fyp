@@ -88,7 +88,7 @@ async function getBatches(params) {
             }); return batches;
         } throw 'Department not found.';
     } else {
-        const departments = await Department.findOne();
+        const departments = await Department.find();
         if (departments) {
             let batches = [];
             departments.forEach(d => {

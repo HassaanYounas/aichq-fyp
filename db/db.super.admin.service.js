@@ -11,7 +11,7 @@ async function createSuperAdmin(params) {
 }
 
 async function loginSuperAdmin(params) {
-    const superAdmin = await SuperAdmin.findOne({ Username: params.Username });
+    const superAdmin = await SuperAdmin.find({ Username: params.Username });
     if (superAdmin && bcrypt.compareSync(params.Password, superAdmin.Password)) {
         const { Password, ...superAdminWithoutPassword } = superAdmin.toObject();
         const token = jwt.sign({ sub: superAdmin.id }, config.secret);
@@ -20,10 +20,13 @@ async function loginSuperAdmin(params) {
 }
 
 async function updateSuperAdmin(params) {
-    await SuperAdmin.updateOne({}, {
+    await SuperAdmin.update({}, {
         Username: params.Username,
         Password: bcrypt.hashSync(params.Password, 10)
-    }); return await SuperAdmin.findOne({});
+    }); 
+    const superAdmin = await SuperAdmin.findOne({});
+    const { Password, ...superAdminWithoutPassword } = superAdmin.toObject();
+    return { ...superAdminWithoutPassword };
 }
 
 module.exports = {

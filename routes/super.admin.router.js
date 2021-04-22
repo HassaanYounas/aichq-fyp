@@ -7,8 +7,8 @@ router.post('/login', loginSuperAdmin);
 router.post('/update', updateSuperAdmin);
 
 function createSuperAdmin(req, res, next) {
-    superAdminService.createSuperAdmin(req.body).then((superAdmin) => {
-        res.json(superAdmin);
+    superAdminService.createSuperAdmin(req.body).then(() => {
+        res.json({});
     }).catch(err => next(err)); 
 }
 

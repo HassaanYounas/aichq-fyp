@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../helpers/config.json');
-const { Student, Group, PendingGroup, GroupToken, SupervisorRequest } = require('../models/index');
+const { Department, PendingGroup, GroupToken } = require('../models/index');
 const mongoose = require('./mongoose');
 const nodemailer = require('nodemailer');
 
@@ -15,15 +15,39 @@ function generateToken(length) {
 }
 
 async function loginGroup(params) {
-    const group = await Group.findOne({ Username: params.Username });
-    if (group && bcrypt.compareSync(params.Password, group.Password)) {
-        const { Password, ...groupWithoutPassword } = group.toObject();
-        const token = jwt.sign({ sub: group.id }, config.secret);
-        return { ...groupWithoutPassword, token };
-    } throw 'Invalid username or password.';
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
+        let group;
+        department.Programs.forEach(p => {
+            if (p.Title === params.Program) {
+                p.Batches.forEach(b => {
+                    if (b.Session === params.Session && b.Year === params.Year) {
+                        b.Groups.forEach(g => {
+                            if (
+                                g.Username === params.Username &&  
+                                bcrypt.compareSync(params.Password, g.Password) 
+                            ) group = g;
+                        });
+                    }
+                });
+            }
+        });
+        if (group) {
+            const { 
+                Username, 
+                StudentOne, 
+                StudentTwo, 
+                SupervisorRequests, 
+                Password, 
+                ...groupWithoutPassword 
+            } = group.toObject();
+            const token = jwt.sign({ sub: group.id }, config.secret);
+            return { ...groupWithoutPassword, token };
+        } else throw 'Invalid email or password.';
+    } else throw 'Department not found.';
 }
 
-async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
+async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID, DepartmentID) {
     const groupToken = new GroupToken({ RollNumber: Student.RollNumber, Token: generateToken(64)});
     const transporter = nodemailer.createTransport({
         host: 'smtp.mailtrap.io', port: 2525,
@@ -37,9 +61,9 @@ async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
             'Hello, ' + Student.FullName + ' (' + Student.RollNumber + ').' + '\n\n' +
             'By clicking on the link below you agree to make FYP Group with ' + OtherStudent.FullName + ' (' + OtherStudent.RollNumber + '):\n\n' +
             'http:\/\/' + Host + '\/api\/group\/verify\/' 
-            + Student.RollNumber + '\/' + groupToken.Token + '\/' + StudentNumber + '\/' + GroupID + '\n'
-    };
-    groupToken.save();
+            + Student.RollNumber + '\/' + groupToken.Token + '\/' + StudentNumber + '\/' + GroupID + '\/' + DepartmentID + '\n'
+    }; 
+    await groupToken.save();
     return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
@@ -51,139 +75,185 @@ async function sendEmail(Student, Host, StudentNumber, OtherStudent, GroupID) {
 }
 
 async function registerGroup(params, req) {
-    if (
-        await Student.findOne({ 
-            Department: params.Department,
-            Program: params.Program,
-            Session: params.Session,
-            Year: params.Year,
-            FullName: params.StudentOne.FullName, 
-            RollNumber: params.StudentOne.RollNumber,
-
-        }) &&
-        await Student.findOne({
-            Department: params.Department,
-            Program: params.Program,
-            Session: params.Session,
-            Year: params.Year,
-            FullName: params.StudentTwo.FullName, 
-            RollNumber: params.StudentTwo.RollNumber 
-        })
-    ) {
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
         if (await PendingGroup.findOne({ Username: params.Username })) throw 'Username already exists.';
-        else {
-            if (
-                await Group.findOne({ 
-                    'StudentOne.RollNumber': params.StudentOne.RollNumber
-                }) || 
-                await Group.findOne({
-                    'StudentTwo.RollNumber': params.StudentTwo.RollNumber
-                }) ||
-                await Group.findOne({ 
-                    'StudentTwo.RollNumber': params.StudentOne.RollNumber
-                }) || 
-                await Group.findOne({
-                    'StudentOne.RollNumber': params.StudentTwo.RollNumber
-                })
-            ) throw 'One of the members has already verified their group. :(';
-            else {
+        try {
+            const pendingGroup = new PendingGroup(params);
+            for (let i = 0; i < 2; i++) {
                 try {
-                    const pendingGroup = new PendingGroup(params);
-                    for (let i = 0; i < 2; i++) {
-                        try {
-                            info = await sendEmail(params.StudentOne, req.headers.host, 'One', params.StudentTwo, pendingGroup._id);
-                            break;
-                        } catch (e) {
-                            error = e;
-                        }
-                    }
-                    for (let i = 0; i < 2; i++) {
-                        try {
-                            info = await sendEmail(params.StudentTwo, req.headers.host, 'Two', params.StudentOne, pendingGroup._id);
-                            break;
-                        } catch (e) {
-                            error = e;
-                        }
-                    }
-                    pendingGroup.Password = bcrypt.hashSync(pendingGroup.Password, 10);
-                    return await pendingGroup.save();
-                } catch (err) { throw err; }
+                    info = await sendEmail(params.StudentOne, req.headers.host, 'One', params.StudentTwo, pendingGroup._id, params.DepartmentID);
+                    break;
+                } catch (e) { error = e; }
             }
-        }
-    } throw 'One of the students does not exist.';
+            for (let i = 0; i < 2; i++) {
+                try {
+                    info = await sendEmail(params.StudentTwo, req.headers.host, 'Two', params.StudentOne, pendingGroup._id, params.DepartmentID);
+                    break;
+                } catch (e) { error = e; }
+            }
+            pendingGroup.Password = bcrypt.hashSync(pendingGroup.Password, 10);
+            return await pendingGroup.save();
+        } catch (err) { throw err; }
+    } throw 'Department not found.';
 }
 
 async function verifyGroup(params) {
-    if (await GroupToken.findOne({ RollNumber: params.RollNumber, Token: params.Token })) {
-        if (params.Student == 'One') {
-            const pendingGroup = await PendingGroup.findOne({ _id: params.GroupID });
-            pendingGroup.StudentOne.Verified = true;
-            if (pendingGroup.StudentTwo.Verified === true) {
-                createGroup(pendingGroup);
-                await Student.updateOne({
-                    RollNumber: pendingGroup.StudentOne.RollNumber
-                }, {
-                    Group: true
+    const department = await Department.find({ _id: params.DepartmentID });
+    if (department) {
+        if (await GroupToken.find({ RollNumber: params.RollNumber, Token: params.Token })) {
+            if (params.Student == 'One') {
+                const pendingGroup = await PendingGroup.find({ _id: params.GroupID });
+                if (pendingGroup) {
+                    pendingGroup.StudentOne.Verified = true;
+                    if (pendingGroup.StudentTwo.Verified === true) {
+                        department.Programs.forEach(p => {
+                            if (p.Title === pendingGroup.Program) {
+                                p.Batches.forEach(b => {
+                                    if (b.Session === pendingGroup.Session && b.Year === pendingGroup.Year) {
+                                        b.Groups.push({
+                                            Username: pendingGroup.Username,
+                                            Password: pendingGroup.Password,
+                                            'StudentOne.RollNumber': pendingGroup.StudentOne.RollNumber,
+                                            'StudentTwo.RollNumber': pendingGroup.StudentTwo.RollNumber,
+                                            SupervisorRequests: []
+                                        });
+                                        b.Students.forEach(s => {
+                                            if (
+                                                s.RollNumber === pendingGroup.StudentOne.RollNumber ||
+                                                s.RollNumber === pendingGroup.StudentTwo.RollNumber
+                                            ) {
+                                                s.Group = true;
+                                                s.Phase = 1;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }); await department.save();
+                        await PendingGroup.deleteOne({ _id: params.GroupID });
+                    } else await pendingGroup.save();
+                    return await GroupToken.deleteOne({ RollNumber: params.RollNumber });
+                }
+            } else if (params.Student == 'Two') {
+                const pendingGroup = await PendingGroup.findOne({ _id: params.GroupID });
+                if (pendingGroup) {
+                    pendingGroup.StudentTwo.Verified = true;
+                    if (pendingGroup.StudentOne.Verified === true) {
+                        department.Programs.forEach(p => {
+                            if (p.Title === pendingGroup.Program) {
+                                p.Batches.forEach(b => {
+                                    if (b.Session === pendingGroup.Session && b.Year === pendingGroup.Year) {
+                                        b.Groups.push({
+                                            Username: pendingGroup.Username,
+                                            Password: pendingGroup.Password,
+                                            'StudentOne.RollNumber': pendingGroup.StudentOne.RollNumber,
+                                            'StudentTwo.RollNumber': pendingGroup.StudentTwo.RollNumber,
+                                            SupervisorRequests: []
+                                        });
+                                        b.Students.forEach(s => {
+                                            if (
+                                                s.RollNumber === pendingGroup.StudentOne.RollNumber ||
+                                                s.RollNumber === pendingGroup.StudentTwo.RollNumber
+                                            ) {
+                                                s.Group = true;
+                                                s.Phase = 1;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }); await department.save();
+                        await PendingGroup.deleteOne({ _id: params.GroupID });
+                    } else await pendingGroup.save();
+                    return await GroupToken.deleteOne({ RollNumber: params.RollNumber });
+                }
+            }
+        } throw 'Link is either invalid or has expired.';
+    } throw 'Department not found.'; 
+}
+
+async function getGroups(params) {
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
+        let groups = [];
+        department.Programs.forEach(p => {
+            p.Batches.forEach(b => {
+                b.Groups.forEach(g => {
+                    groups.push({
+                        Department: department.Name,
+                        Program: p.Title,
+                        Session: b.Session,
+                        Year: b.Year,
+                        Username: g.Username,
+                        SupervisorEmail: g.SupervisorEmail,
+                        ProjectTitle: g.ProjectTitle,
+                        StudentOne: {
+                            RollNumber: g.StudentOne.RollNumber
+                        },
+                        StudentTwo: {
+                            RollNumber: g.StudentTwo.RollNumber
+                        }
+                    })
                 });
-                await Student.updateOne({
-                    RollNumber: pendingGroup.StudentTwo.RollNumber
-                }, {
-                    Group: true
-                });
-                await PendingGroup.deleteOne({ _id: params.GroupID });
-            } else await pendingGroup.save();
-            return await GroupToken.deleteOne({ RollNumber: params.RollNumber });
-        } else if (params.Student == 'Two') {
-            const pendingGroup = await PendingGroup.findOne({ _id: params.GroupID });
-            pendingGroup.StudentTwo.Verified = true;
-            if (pendingGroup.StudentOne.Verified === true) {
-                createGroup(pendingGroup);
-                await PendingGroup.deleteOne({ _id: params.GroupID });
-            } else await pendingGroup.save();
-            return await GroupToken.deleteOne({ RollNumber: params.RollNumber });
-        }
-    } throw 'Link is either invalid or has expired.';
-}
-
-async function createGroup(pendingGroup) {
-    const group = new Group();
-    group.Department = pendingGroup.Department;
-    group.Program = pendingGroup.Program;
-    group.Session = pendingGroup.Session;
-    group.Year = pendingGroup.Year;
-    group.Username = pendingGroup.Username;
-    group.Password = pendingGroup.Password;
-    group.StudentOne.RollNumber = pendingGroup.StudentOne.RollNumber;
-    group.StudentTwo.RollNumber = pendingGroup.StudentTwo.RollNumber;
-    group.Password = pendingGroup.Password;
-    await group.save();
-}
-
-async function getGroups() {
-    let groupsWithoutPassword = [];
-    let groups = await Group.find();
-    for (let i = 0; i < groups.length; i++) {
-        const { Password, ...groupWithoutPassword } = groups[i].toObject();
-        groupsWithoutPassword.push(groupWithoutPassword);
-    }
-    return groupsWithoutPassword;
-}
-
-async function assignSupervisor(params) {
-    console.log(params)
-    await Group.updateOne({
-        _id: params._id
-    }, {
-        SupervisorEmail: params.SupervisorEmail,
-        ProjectTitle: params.ProposalTitle
-    });
-    return await SupervisorRequest.deleteMany({
-        GroupID: params._id
-    });
+            });
+        }); return groups;
+    } else throw 'Department not found.';
 }
 
 async function getGroup(params) {
-    return await Group.findOne({ _id: params._id });
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
+        let group;
+        department.Programs.forEach(p => {
+            if (p.Title == params.Program) {
+                p.Batches.forEach(b => {
+                    if (b.Session == params.Session && b.Year == params.Year) {
+                        b.Groups.forEach(g => {
+                            if (g._id == params.GroupID) {
+                                group = {
+                                    Department: department.Name,
+                                    Program: p.Title,
+                                    Session: b.Session,
+                                    Year: b.Year,
+                                    Username: g.Username,
+                                    SupervisorEmail: g.SupervisorEmail,
+                                    ProjectTitle: g.ProjectTitle,
+                                    StudentOne: {
+                                        RollNumber: g.StudentOne.RollNumber
+                                    },
+                                    StudentTwo: {
+                                        RollNumber: g.StudentTwo.RollNumber
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }); return group;
+    } else throw 'Department not found.';
+}
+
+async function assignSupervisor(params) {
+    const department = await Department.findOne({ Name: params.Department });
+    if (department) {
+        department.Programs.forEach(p => {
+            if (p.Title == params.Program) {
+                p.Batches.forEach(b => {
+                    if (b.Session == params.Session && b.Year == params.Year) {
+                        b.Groups.forEach(g => {
+                            if (g._id == params.GroupID) {
+                                g.SupervisorEmail = params.SupervisorEmail;
+                                g.ProjectTitle = params.ProposalTitle;
+                                g.SupervisorRequests = [];
+                            }
+                        });
+                    }
+                });
+            }
+        }); return await department.save();
+    } else throw 'Department not found.';
 }
 
 module.exports = {

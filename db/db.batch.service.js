@@ -1,50 +1,62 @@
-const { Batch, Student, Supervisor } = require('../models/index');
+const { Department } = require('../models/index');
 const mongoose = require('./mongoose');
 
 async function addBatch(params) {
-    if (await Batch.findOne({ 
-        Session: params.Session,
-        Year: params.Year,
-        Department: params.Department,
-        Program: params.Program 
-    })) throw 'Batch already exists.';
-    const batch = new Batch(params);
-    return await batch.save();
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
+        department.Programs.forEach(e => {
+            if (e.Title == params.Program) {
+                e.Batches.forEach(b => {
+                    if (b.Year == params.Year && b.Session == params.Session) throw 'Batch already exists.';
+                });
+                e.Batches.push({
+                    Session: params.Session,
+                    Year: params.Year
+                });
+            }
+        }); return await department.save();
+    }
 }
 
 async function getStudentsCount(params) {
-    return await Student.count({
-        Department: params.Department,
-        Program: params.Program,
-        Session: params.Session,
-        Year: params.Year
-    }, (err, studentDocs) => {
-        if (err) throw err;
-        return studentDocs;
-    });
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
+        let count = 0;
+        department.Programs.forEach(p => {
+            if (p.Title == params.Program) {
+                p.Batches.forEach(b => {
+                    if (b.Session == params.Session && b.Year == params.Year) count = b.Students.length;
+                });
+            }
+        });
+        return await count;
+    } throw 'Department not found.';
 }
 
 async function getSupervisorsCount(params) {
-    return await Supervisor.count({
-        Department: params.Department,
-        Active: true
-    }, (errSupervisor, supervisorDocs) => {
-        if (errSupervisor) throw errSupervisor;
-        return supervisorDocs;
-    })
-}
-
-async function getNumberOfBatches(params) {
-    return await Batch.count({
-        Department: params.Department,
-        Program: params.Program
-    });
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
+        let count = 0;
+        department.Supervisors.forEach(s => {
+            if (s.Active) count++;
+        });
+        return await count;
+    } throw 'Department not found.';
 }
 
 async function updateMaxGroups(params, maxGroups) {
-    return await Batch.updateOne(params, {
-        MaxGroups: maxGroups
-    }); 
+    const department = await Department.find({ Name: params.Department });
+    if (department) {
+        department.Programs.forEach(e => {
+            if (e.Title == params.Program) {
+                e.Batches.forEach(b => {
+                    if (b.Year == params.Year && b.Session == params.Session) {
+                        b.MaxGroups = maxGroups;   
+                    }
+                });
+            }
+        }); return await department.save();
+    } throw 'Department not found.';
 }
 
 async function setMaxGroups(params) {
@@ -58,15 +70,48 @@ async function setMaxGroups(params) {
 }
 
 async function getBatches(params) {
-    if ('Department' in params) 
-        return await Batch.find({ Department: params.Department });
-    else
-        return await Batch.find();
+    if ('Department' in params) {
+        const department = await Department.find({ Name: params.Department });
+        if (department) {
+            let batches = [];
+            department.Programs.forEach(e => {
+                e.Batches.forEach(b => {
+                    batches.push({
+                        Department: params.Department,
+                        Archived: b.Archived,
+                        MaxGroups: b.MaxGroups,
+                        Program: e.Title,
+                        Session: b.Session,
+                        Year: b.Year
+                    });
+                });
+            }); return batches;
+        } throw 'Department not found.';
+    } else {
+        const departments = await Department.find();
+        if (departments) {
+            let batches = [];
+            departments.forEach(d => {
+                d.Programs.forEach(p => {
+                    p.Batches.forEach(b => {
+                        if (b.Archived == false) {
+                            batches.push({
+                                Department: d.Name,
+                                Program: p.Title,
+                                Session: b.Session,
+                                Year: b.Year
+                            });
+                        }
+                    });
+                });
+            });
+            return batches;
+        } else 'No department found.';
+    }
 }
 
 module.exports = {
     addBatch,
     setMaxGroups,
-    getBatches,
-    getNumberOfBatches
+    getBatches
 }

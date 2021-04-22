@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/login', loginSupervisor);
 router.post('/add', addSupervisor);
 router.post('/add/bulk', addSupervisorsBulk);
-router.post('/set/active', setSupervisorActive );
+router.post('/set/active', setSupervisorActive);
 router.post('/set/inactive', setSupervisorInactive);
 router.post('/proposal/submit', submitSupervisorProposal);
 router.post('/proposal/get/all', getSupervisorProposals);
@@ -14,7 +14,6 @@ router.post('/request/submit', addSupervisionRequest);
 router.post('/request/get', getSupervisionRequests);
 router.post('/request/update', updateSupervisionRequest);
 router.post('/get/all', getSupervisors);
-router.post('/get', getSupervisor);
 
 function loginSupervisor(req, res, next) {
     supervisorService.loginSupervisor(req.body).then((supervisor) => {
@@ -33,12 +32,12 @@ function addSupervisorsBulk(req, res, next) {
     for (let i = 0; i < req.body.length; i++) {
         supervisorService.addSupervisor(req.body[i]).then(() => {
             if (i === req.body.length - 1) {
-                if (fewFailed) next('Few insertions failed.');
+                if (fewFailed) next('One or more insertions failed.');
                 else res.json({});
             }
         }).catch(err => {
             fewFailed = true;
-            if ((i === req.body.length - 1) && fewFailed) next('Few insertions failed.');
+            if ((i === req.body.length - 1) && fewFailed) next('One or more insertions failed.');
         });
     }
 }
@@ -94,12 +93,6 @@ function updateSupervisionRequest(req, res, next) {
 function getSupervisors(req, res, next) {
     supervisorService.getSupervisors(req.body).then((supervisors) => {
         res.json(supervisors);
-    }).catch(err => next(err)); 
-}
-
-function getSupervisor(req, res, next) {
-    supervisorService.getSupervisor(req.body).then((supervisor) => {
-        res.json(supervisor);
     }).catch(err => next(err)); 
 }
 

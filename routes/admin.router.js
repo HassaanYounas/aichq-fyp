@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.post('/login', loginAdmin);
 router.post('/update', updateAdmin);
-router.post('/get', getAdmin);
 
 function loginAdmin(req, res, next) {
     adminService.loginAdmin(req.body).then((admin) => {
@@ -14,12 +13,6 @@ function loginAdmin(req, res, next) {
 
 function updateAdmin(req, res, next) {
     adminService.updateAdmin(req.body).then((admin) => {
-        res.json(admin);
-    }).catch(err => next(err));
-}
-
-function getAdmin(req, res, next) {
-    adminService.getAdmin(req.body).then((admin) => {
         res.json(admin);
     }).catch(err => next(err));
 }

@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post('/add', addDepartment);
 router.post('/add/program', addProgram);
+router.post('/update', updateDepartment);
 router.post('/get/all', getDepartments);
 router.post('/get/programs', getPrograms);
 
@@ -19,9 +20,15 @@ function addProgram(req, res, next) {
     }).catch(err => next(err)); 
 }
 
+function updateDepartment(req, res, next) {
+    departmentService.updateDepartment(req.body).then(() => {
+        res.json({});
+    }).catch(err => next(err)); 
+}
+
 function getPrograms(req, res, next) {
-    departmentService.getPrograms(req.body).then((department) => {
-        res.json(department.Programs);
+    departmentService.getPrograms(req.body).then((programs) => {
+        res.json(programs);
     }).catch(err => next(err)); 
 }
 

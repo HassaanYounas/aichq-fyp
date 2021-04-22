@@ -3,11 +3,11 @@ const groupService = require('../db/db.group.service');
 const router = express.Router();
 
 router.post('/reg', registerGroup);
-router.get('/verify/:RollNumber/:Token/:Student/:GroupID', verifyGroup);
+router.get('/verify/:RollNumber/:Token/:Student/:GroupID/:DepartmentID', verifyGroup);
 router.post('/login', loginGroup);
 router.post('/get/all', getGroups);
-router.post('/assign/supervisor', assignSupervisor);
 router.post('/get', getGroup);
+router.post('/assign/supervisor', assignSupervisor);
 
 function loginGroup(req, res, next) {
     groupService.loginGroup(req.body).then((group) => {
@@ -28,20 +28,20 @@ function verifyGroup(req, res, next) {
 }
 
 function getGroups(req, res, next) {
-    groupService.getGroups().then((groups) => {
+    groupService.getGroups(req.body).then((groups) => {
         res.json(groups);
-    }).catch(err => next(err)); 
-}
-
-function assignSupervisor(req, res, next) {
-    groupService.assignSupervisor(req.body).then(() => {
-        res.json({});
     }).catch(err => next(err)); 
 }
 
 function getGroup(req, res, next) {
     groupService.getGroup(req.body).then((group) => {
         res.json(group);
+    }).catch(err => next(err)); 
+}
+
+function assignSupervisor(req, res, next) {
+    groupService.assignSupervisor(req.body).then(() => {
+        res.json({});
     }).catch(err => next(err)); 
 }
 

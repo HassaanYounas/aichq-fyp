@@ -30,7 +30,7 @@ function addStudentsBulk(req, res, next) {
 }
 
 function getStudents(req, res, next) {
-    studentService.getStudents().then((students) => {
+    studentService.getStudents(req.body).then((students) => {
         res.json(students);
     }).catch(err => next(err)); 
 }

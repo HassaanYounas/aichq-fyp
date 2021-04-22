@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.post('/add', addBatch);
 router.post('/set/maxgroups', setMaxGroups);
-router.post('/get/number/batches', getNumberOfBatches);
 router.post('/get', getBatches);
 
 function addBatch(req, res, next) {

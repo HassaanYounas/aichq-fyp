@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const jwt = require('./helpers/jwt');
@@ -14,11 +13,11 @@ const helperRouter = require('./routes/helper.router');
 const errorHandler = require('./helpers/error-handler');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(process.cwd() + '/client/'));
 //app.use(jwt());
 app.use('/api', helperRouter);

@@ -1,4 +1,4 @@
 {
-    "connectionString": "mongodb+srv://AichQFYP:HTHQ@123@aichqfyp.t8oya.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "connectionString": "mongodb+srv://AichQFYP:HTHQ@123@aichqfyp.t8oya.mongodb.net/AichQFYP?retryWrites=true&w=majority",
     "secret": "5161dssadfdsfsasdsaddhhg516fds159das82das7046fds935das061dghjhhj0784019625fas055gfd98270"
 }
